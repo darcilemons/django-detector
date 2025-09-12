@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Usuários</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:hover { background-color: #f5f5f5; }
+        a { display: inline-block; margin-top: 20px; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; }
+        a:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <h1>Condomínios</h1>
+    
+    {% if conds %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Relatos</th>
+                    <th>Data de Cadastro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for conds in conds %}
+                <tr>
+                    <td>{{ conds.name }}</td>
+                    <td>{{ conds.relatos }}</td>
+                    <td>{{ conds.created_at|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum condomínio cadastrado ainda.</p>
+    {% endif %}
+    
+    <a href="{% url 'cadastro' %}">Voltar para o cadastro</a>
+</body>
+</html>
