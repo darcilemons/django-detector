@@ -2,6 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.cadastrar_cond, name='cadastro'),
-    path('lista/', views.listar_conds, name='lista'),
+    path('cad_cond/', views.cadastrar_cond, name='cadastro'),
+    path('conds/', views.listar_conds, name='conds'),
 ]
