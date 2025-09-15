@@ -1,54 +1,120 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="text"] {
-            width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
-        }
-        .error { color: red; font-size: 12px; }
-        .success { color: green; font-weight: bold; margin-bottom: 15px; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style>
+    <title>Cadastro Completo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Cadastro de condomínios</h1>
-    {% if mensagem %}
-        <div class="success">{{ mensagem }}</div>
-    {% endif %}
-
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
-            {{ form.name }}
-            {% if form.name.errors %}
-                <div class="error">{{ form.name.errors }}</div>
-            {% endif %}
+    <div class="container mt-5">
+        <h2>Cadastro de Condomínio e Equipamento</h2>
+        
+        <!-- Formulário do Condomínio -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>1. Dados do Condomínio</h4>
+            </div>
+            <div class="card-body">
+                <form id="condominio-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="condominio_data" value="true">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ cond_form.name.label_tag }}
+                                {{ cond_form.name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ cond_form.endereco.label_tag }}
+                                {{ cond_form.endereco }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ cond_form.equipamento.label_tag }}
+                                {{ cond_form.equipamento }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Salvar Condomínio</button>
+                </form>
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="{{ form.relatos.id_for_label }}">{{ form.relatos.label }}</label>
-            {{ form.relatos }}
-            {% if form.relatos.errors %}
-                <div class="error">{{ form.email.errors }}</div>
-            {% endif %}
+    <div class="card" id="equipamento-section" style="display: none;">
+            <div class="card-header">
+                <h4>2. Dados do Equipamento</h4>
+            </div>
+            <div class="card-body">
+                <div id="equipamento-form-container">
+                    <!-- O formulário de equipamento será carregado aqui via AJAX -->
+                    <p class="text-muted">Selecione o tipo de equipamento e salve o condomínio primeiro.</p>
+                </div>
+            </div>
         </div>
-        
-        <button type="submit">Cadastrar</button>
-    </form>
-    
-    <p style="margin-top: 20px;">
-        <a href="{% url 'conds' %}">Ver lista de condomínios cadastrados</a>
-    </p>
-    </form>
+    </div>
 
+    <script>
+    // Quando o formulário do condomínio é submetido
+    $('#condominio-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            type: 'POST',
+            url: '',
+            data: $(this).serialize(),
+            success: function(response) {
+                // Recarrega a página para atualizar o contexto
+                location.reload();
+            },
+            error: function(error) {
+                console.log('Erro:', error);
+            }
+        });
+    });
+
+    // Função para carregar o formulário de equipamento
+    function carregarFormularioEquipamento() {
+        const tipoEquipamento = $('#id_equipamento').val();
+        const condominioId = '{{ condominio_id }}';
+        
+        if (tipoEquipamento && condominioId) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url "get_form_fields" %}',
+                data: {
+                    'tipo_equipamento': tipoEquipamento,
+                    'condominio_id': condominioId
+                },
+                success: function(response) {
+                    if (response.form_html) {
+                        $('#equipamento-form-container').html(response.form_html);
+                        $('#equipamento-section').show();
+                    }
+                },
+                error: function(error) {
+                    console.log('Erro:', error);
+                }
+            });
+        }
+    }
+
+    // Se já temos um condomínio salvo, carrega o formulário
+    $(document).ready(function() {
+        const condominioId = '{{ condominio_id }}';
+        const tipoEquipamento = $('#id_equipamento').val();
+        
+        if (condominioId && tipoEquipamento) {
+            carregarFormularioEquipamento();
+        }
+    });
+    </script>
 </body>
 </html>
