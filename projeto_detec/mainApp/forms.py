@@ -1,5 +1,5 @@
 from django import forms
-from .models import Conds, Itens_facial, Itens_dvr, Itens_outro
+from .models import Conds, Itens_facial, Itens_dvr, Itens_outro, Relatos
 
 class condsForm(forms.ModelForm):
     class Meta:
@@ -135,4 +135,19 @@ class OutroForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Descrição'
             }),
+        }
+        
+class RelatoForm(forms.ModelForm):
+    class Meta:
+        model = Relatos
+        fields = ['cond_id', 'relato']
+        widgets = {
+            'cond_id': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Condomínio'
+            }),
+            'relato': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Relato'
+            })
         }

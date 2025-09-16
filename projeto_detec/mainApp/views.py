@@ -4,6 +4,7 @@ from .models import Conds, Itens_dvr, Itens_facial, Itens_outro
 
 def home(request):
     return render(request, 'home.html')
+
 def cad_cond(request):
     if request.method == 'POST':
         form = condsForm(request.POST)
@@ -72,3 +73,52 @@ def detail_conds(request, condominio_id):
         'dvr': dvr,
         'outro': outro
     })
+
+def main_relato(request):
+    cond = Conds.objects.all()
+    return render(request, 'main_relato.html', {'conds': cond})
+
+def relato(request, condominio_id):
+    condominio = get_object_or_404(Conds, id=condominio_id)
+    
+    if request.method == 'POST':
+        tipo_relato = request.POST.get('tipo_relato')
+        return redirect('categoria_relato', condominio_id=condominio.id, tipo=tipo_relato)
+    
+    return render(request, 'relato.html', {'condominio': condominio})
+
+def categoria_relato(request, condominio_id, tipo):
+    condominio = get_object_or_404(Conds, id=condominio_id)
+    
+    if request.method == 'POST':
+        cat_relato = request.POST.get('cat_relato')
+        return redirect('cad_categoria',condominio_id=condominio.id, cat_relato=cat_relato)
+    
+    return render(request, 'categoria_relato.html', {'condominio': condominio, 'cat_relato': cat_relato})
+
+def cad_categoria(request, condominio_id, cat_relato):
+    condominio = get_object_or_404(Conds, id=condominio_id)
+    
+    if cat_relato == 'aberturas':
+        print(f"ABERTURAS SELECIONADA")
+    """elif tipo == 'ayel_cameras':
+        form_class = DVRForm
+        template = 'equip-forms/cad_dvr.html'
+    else:
+        return redirect('equip', condominio_id=condominio_id)"""
+    
+    """if request.method == 'POST':
+        form = form_class(request.POST)
+        if form.is_valid():
+            equipamento = form.save(commit=False)
+            equipamento.cond_id = condominio
+            equipamento.save()
+            return redirect('cadastrar_condominio')
+    else:
+        form = form_class()
+    
+    return render(request, template, {
+        'form': form,
+        'condominio': condominio,
+        'tipo_equipamento': tipo
+    })"""

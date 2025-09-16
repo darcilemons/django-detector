@@ -96,16 +96,46 @@ class TipoEquip(models.Model):
     
     def __str__(self):
         return self.descricao
-    
+
 class TipoRelato(models.Model):
     TIPOS_RELATOS = [
         ('ayel', 'App Ayel'),
-        ('ayel_cameras', 'App Ayel Câmeras'),
-        ('CFTV', 'Sistema de segurança')
+        ('ayel_cameras', 'App Ayel Câmeras')
     ]
 
     nome = models.CharField(max_length=15, choices=TIPOS_RELATOS, unique=True)
-    descricao = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.descricao
+        return self.nome
+    
+class CategoriaRelatoAyel(models.Model):
+    CATEGORIA_AYEL = [
+        ('aberturas', 'Aberturas'),
+        ('cameras', 'Câmeras'),
+        ('cadastroApp', 'Cadastro'),
+        ('interfonia', 'Interfonia')
+    ]
+    
+    nome = models.CharField(max_length=20, choices=CATEGORIA_AYEL, unique=True)
+    
+    def __str__(self):
+        return self.nome
+    
+class CategoriaRelatoCam(models.Model):
+    CATEGORIA_CAM = [
+        ('login', 'Login'),
+        ('cameras', 'Câmeras'),
+        ('cadastroApp', 'Cadastro')
+    ]
+    
+    nome = models.CharField(max_length=20, choices=CATEGORIA_CAM, unique=True)
+    
+    def __str__(self):
+        return self.nome 
+
+class Relatos(models.Model):
+    cond_id = models.ForeignKey(Conds, on_delete=models.CASCADE, related_name='relatos', verbose_name='Condomínio')
+    relato = models.CharField(max_length=100, verbose_name='Relato')
+    tipo_relato = models.ForeignKey(TipoRelato, on_delete=models.CASCADE, related_name='tipo_relato', verbose_name='Tipo do Relato')
+    cat_rel_ayel = models.ForeignKey(CategoriaRelatoAyel, on_delete=models.CASCADE, related_name='cat_rel_ayel', verbose_name='Categoria do relato - App Ayel')
+    cat_rel_cam = models.ForeignKey(CategoriaRelatoCam, on_delete=models.CASCADE, related_name='cat_rel_cam', verbose_name='Categoa do relato - Ayel Câmeras')

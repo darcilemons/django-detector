@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATO</title>
+</head>
+<body>
+    <h1>Condomínio {{ condominio.name }}</h1>
+    <h2>Selecione o aplicativo</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <input type="radio" name="tipo_relato" value="ayel" id="ayel">
+            <label for="ayel">App Ayel</label>
+        </div>
+        <div>
+            <input type="radio" name="tipo_relato" value="ayel_cameras" id="ayel_cameras">
+            <label for="ayel_cameras">App Ayel Câmeras</label>
+        </div>
+        <button type="submit">Próximo</button>
+    </form>
+    <button><a href="{% url 'main_relato' %}">Voltar</a></button>
+</body>
+</html>

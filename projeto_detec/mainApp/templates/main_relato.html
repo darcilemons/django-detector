@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lista de Condomínios</title>
+    <title>RELATOS</title>
 </head>
 <body>
-    <h1>Condomínios</h1>
-    
+    <h1>RELATO</h1>
+    <h2>Selecione o condomínio</h2>
     {% if conds %}
         <table>
             <thead>
                 <tr>
                     <th>Nome</th>
-                    <th>Data de Cadastro</th>
                 </tr>
             </thead>
             <tbody>
                 {% for conds in conds %}
                 <tr>
-                    <td>{{ conds.name }}</td>
-                    <td>{{ conds.created_at|date:"d/m/Y" }}</td>
+                    <td><a href="{% url 'relato' conds.id %}">{{ conds.name }}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

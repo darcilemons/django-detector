@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATO</title>
+</head>
+<body>
+    <h1>Condomínio {{ condominio.name }}</h1>
+    {% if cat_relato == 'ayel' %}
+        <h2>Aplicativo Ayel</h2>
+        <h2>Selecione o tipo de relato</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <input type="radio" name="cat_relato" value="aberturas" id="aberturas">
+                <label for="aberturas">Aberturas</label>
+            </div>
+            <div>
+                <input type="radio" name="cat_relato" value="cameras" id="cameras">
+                <label for="cameras">Câmeras</label>
+            </div>
+            <div>
+                <input type="radio" name="cat_relato" value="cadastroApp" id="cadastroApp">
+                <label for="cadastroApp">Cadastro</label>
+            </div>
+            <div>
+                <input type="radio" name="cat_relato" value="interfonia" id="interfonia">
+                <label for="interfonia">Interfonia</label>
+            </div>
+            <button type="submit">Próximo</button>
+        </form>
+    {% endif %}
+
+    {% if cat_relato == 'ayel_cameras' %}
+        <h2>Aplicativo Ayel Câmeras</h2>
+        <h2>Selecione o tipo de relato</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <input type="radio" name="cat_relato" value="aberturas" id="aberturas">
+                <label for="login">Aberturas</label>
+            </div>
+            <div>
+                <input type="radio" name="cat_relato" value="cameras" id="cameras">
+                <label for="cameras">Câmeras</label>
+            </div>
+            <div>
+                <input type="radio" name="cat_relato" value="cadastroApp" id="cadastroApp">
+                <label for="cadastroApp">Cadastro</label>
+            </div>
+            <button type="submit">Próximo</button>
+        </form>
+    {% endif %}
+    <button><a href="{% url 'relato' condominio.id %}">Voltar</a></button>
+</body>
+</html>
