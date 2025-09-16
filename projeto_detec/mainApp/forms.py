@@ -4,15 +4,11 @@ from .models import Conds, Itens_facial, Itens_dvr, Itens_outro
 class condsForm(forms.ModelForm):
     class Meta:
         model = Conds
-        fields = ['name', 'relatos', 'endereco']
+        fields = ['name', 'endereco']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Digite o nome do condomínio'
-            }),
-            'relatos': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Relato'
             }),
             'endereco': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -21,7 +17,6 @@ class condsForm(forms.ModelForm):
         }
         labels = {
             'name': 'Condomínio',
-            'relatos': 'Relatos',
             'endereco': 'Endereço'
         }
         

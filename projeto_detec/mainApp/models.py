@@ -5,7 +5,6 @@ class Conds(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     endereco = models.CharField(max_length=200)
-    relatos = models.CharField(max_length=100)
     
     def total_equipamentos(self):
         return (self.itens_facial.count() + 
@@ -95,5 +94,18 @@ class TipoEquip(models.Model):
     nome = models.CharField(max_length=10, choices=TIPOS_EQUIPAMENTOS, unique=True)
     descricao = models.CharField(max_length=100)
     
+    def __str__(self):
+        return self.descricao
+    
+class TipoRelato(models.Model):
+    TIPOS_RELATOS = [
+        ('ayel', 'App Ayel'),
+        ('ayel_cameras', 'App Ayel Câmeras'),
+        ('CFTV', 'Sistema de segurança')
+    ]
+
+    nome = models.CharField(max_length=15, choices=TIPOS_RELATOS, unique=True)
+    descricao = models.CharField(max_length=100)
+
     def __str__(self):
         return self.descricao

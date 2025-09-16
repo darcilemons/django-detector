@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import condsForm, FacialForm, DVRForm, OutroForm
 from .models import Conds, Itens_dvr, Itens_facial, Itens_outro
 
+def home(request):
+    return render(request, 'home.html')
 def cad_cond(request):
     if request.method == 'POST':
         form = condsForm(request.POST)
