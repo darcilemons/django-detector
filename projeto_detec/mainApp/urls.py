@@ -3,14 +3,14 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('cad_cond/', views.cad_cond, name='cadastrar_condominio'),
-    path('equipamento/<int:condominio_id>/', views.equip, name='equip'),
-    path('cadastrar-equipamento/<int:condominio_id>/<str:tipo>/', views.cad_equip, name='cad_equip'),
-    path('listar_conds', views.listar_conds, name='listar_conds'),
-    path('listar_conds/<int:condominio_id>/', views.detail_conds, name='detail_conds'),
-    path('main_relato/', views.main_relato, name='main_relato'),
-    path('main_relato/<int:condominio_id>/', views.relato, name='relato'),
-    path('main_relato/<int:condominio_id>/<str:tipo>/', views.categoria_relato, name='categoria_relato'),
-    path('main_relato/<int:condominio_id>/<str:tipo>/<str:cat_relato>/', views.cad_categoria, name='cad_categoria'),
-    
+    path('cad_cond/', views.cad_cond, name='cadastrar_condominio'), # cadastro condomínio
+    path('equipamento/<int:condominio_id>/', views.equip, name='equip'), # cadastro equipamento no condomínio
+    path('cadastrar-equipamento/<int:condominio_id>/<str:tipo>/', views.cad_equip, name='cad_equip'), # tipo do equipamento (dvr, facial ou outro)
+    path('listar_conds/', views.listar_conds, name='listar_conds'), # listar os condomínios
+    path('listar_relatos/', views.listar_relatos, name='listar_relatos'),
+    path('listar_conds/<int:condominio_id>/', views.detail_conds, name='detail_conds'), # detalhar condomínio
+    path('main_relato/', views.main_relato, name='main_relato'), # primeira página relato
+    path('main_relato/<int:condominio_id>/', views.relato, name='relato'), # escolher app
+    path('main_relato/<int:condominio_id>/<str:tipo_relato>/', views.categoria_relato, name='categoria_relato'), # categoria do relato
+    path('main_relato/<int:condominio_id>/<str:tipo_relato>/<str:cat_relato>/', views.cad_categoria, name='cad_categoria'), # cadastrar relato
 ]

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATOS</title>
+</head>
+<body>
+    <h1>Todos os relatos</h1>
+    {% if relatos %}
+        <p>Total de relatos: {{ relatos.count }}</p>
+    {% else %}
+        Nenhum relato cadastrado.
+        <a href="{% url 'main_relato' %}"><button>Cadastrar relato</button></a>
+    {% endif %}
+
+    <a href="{% url 'home' %}"><button>Home</button></a>
+</body>
+</html>

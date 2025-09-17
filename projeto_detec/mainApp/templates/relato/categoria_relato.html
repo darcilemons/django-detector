@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATO</title>
+</head>
+<body>
+    <h1>Condomínio {{ condominio.name }}</h1>
+        
+        <h3>Selecione a categoria para {{ tipo_relato.get_nome_display }}</h3>
+        <form method="POST">
+        {% csrf_token %}
+        
+            {% if categorias_ayel%}
+                <label for="cat_relato_ayel">Categoria:</label>
+                
+                <select name="cat_relato" id="cat_relato_ayel" class="form-control" required>
+                    <option value="">Selecione uma categoria</option>
+                    {% for categoria in categorias_ayel %}
+                        <option value="{{ categoria.id }}">{{ categoria.get_nome_display }}</option>
+                    {% endfor %}
+                </select>
+        
+            {% elif categorias_cam%}
+                <label for="cat_relato_cam">Categoria:</label>
+                
+                <select name="cat_relato" id="cat_relato_cam" class="form-control" required>
+                    <option value="">Selecione uma categoria</option>
+                    {% for categoria in categorias_cam %}
+                        <option value="{{ categoria.id }}">{{ categoria.get_nome_display }}</option>
+                    {% endfor %}
+                </select>
+        
+            {% else %}
+                <p style="color: red;">Nenhuma categoria disponível para este tipo de relato.</p>
+            {% endif %}
+
+            {% if categorias_ayel or categorias_cam %}
+                <button type="submit" class="btn-primary">Próximo</button>
+            {% endif %}
+        </form>
+    
+        {% if messages %}
+            <div style="color: red; margin: 10px 0;">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+</body>
+</html>

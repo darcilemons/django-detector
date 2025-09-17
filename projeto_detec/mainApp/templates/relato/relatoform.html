@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATO</title>
+</head>
+<body>
+    <h1>Relato para {{ condominio.name }}</h1>
+    <h3>Tipo: {{ tipo_relato.get_nome_display }}</h3>
+    <h3>Categoria: {{ categoria.get_nome_display }}</h3>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Mostra todos os erros do formulário -->
+        {% if form.non_field_errors %}
+            <div class="error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        
+        <!-- Campo relato (único campo editável) -->
+        <div>
+            <label for="id_relato">Descrição do Relato:*</label>
+            <textarea name="relato" id="id_relato" class="form-control" rows="4" required>{{ form.relato.value|default:'' }}</textarea>
+            {% if form.relato.errors %}
+                <div class="error">{{ form.relato.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Campos hidden para os valores fixos -->
+        <input type="hidden" name="tipo_relato" value="{{ tipo_relato.id }}">
+        
+        {% if tipo_relato.nome == 'ayel' %}
+            <input type="hidden" name="cat_rel_ayel" value="{{ categoria.id }}">
+            <input type="hidden" name="cat_rel_cam" value="">
+        {% else %}
+            <input type="hidden" name="cat_rel_cam" value="{{ categoria.id }}">
+            <input type="hidden" name="cat_rel_ayel" value="">
+        {% endif %}
+        
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px;">
+            Salvar Relato
+        </button>
+    </form>
+    
+    <br>
+    <a href="{% url 'categoria_relato' condominio.id tipo_relato.nome %}">Voltar</a>
+
+    {% if messages %}
+    <div style="color: green; margin: 10px 0;">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

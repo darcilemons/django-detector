@@ -11,14 +11,14 @@
             <thead>
                 <tr>
                     <th>Nome</th>
-                    <th>Data de Cadastro</th>
+                    <th>----</th>
                 </tr>
             </thead>
             <tbody>
                 {% for conds in conds %}
                 <tr>
                     <td>{{ conds.name }}</td>
-                    <td>{{ conds.created_at|date:"d/m/Y" }}</td>
+                    <td><a href="{% url 'detail_conds' conds.id %}"><button>DETALHES</button></a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -27,7 +27,7 @@
         <p>Nenhum condomínio cadastrado ainda.</p>
     {% endif %}
     
-    <a href="{% url 'cadastrar_condominio' %}">Adicionar condomínio</a>
-    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'cadastrar_condominio' %}"><button>Adicionar condomínio</button></a>
+    <a href="{% url 'home' %}"><button>Home</button></a>
 </body>
 </html>

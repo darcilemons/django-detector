@@ -137,5 +137,15 @@ class Relatos(models.Model):
     cond_id = models.ForeignKey(Conds, on_delete=models.CASCADE, related_name='relatos', verbose_name='Condomínio')
     relato = models.CharField(max_length=100, verbose_name='Relato')
     tipo_relato = models.ForeignKey(TipoRelato, on_delete=models.CASCADE, related_name='tipo_relato', verbose_name='Tipo do Relato')
-    cat_rel_ayel = models.ForeignKey(CategoriaRelatoAyel, on_delete=models.CASCADE, related_name='cat_rel_ayel', verbose_name='Categoria do relato - App Ayel')
-    cat_rel_cam = models.ForeignKey(CategoriaRelatoCam, on_delete=models.CASCADE, related_name='cat_rel_cam', verbose_name='Categoa do relato - Ayel Câmeras')
+    cat_rel_ayel = models.ForeignKey(CategoriaRelatoAyel, on_delete=models.CASCADE, related_name='cat_rel_ayel', verbose_name='Categoria do Relato', null=True, blank=True)
+    cat_rel_cam = models.ForeignKey(CategoriaRelatoCam, on_delete=models.CASCADE, related_name='cat_rel_ayel', verbose_name='Categoria do Relato', null=True, blank=True)
+    data = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.cond_id.name} - {self.tipo_relato} - {self.relato}"
+    
+    def data_local(self):   # para exibir no template <td>{{ relato.data_local }}</td>
+        from django.utils.timezone import localtime
+        return localtime(self.data).strftime("%d/%m/%Y %H:%M:%S")
+    
+    

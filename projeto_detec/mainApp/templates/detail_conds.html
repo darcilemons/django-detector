@@ -1,146 +1,198 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Equipamentos - {{ condominio.name }}</title>
+    <title>DETALHES {{ condominio.name }}</title>
 </head>
 <body>
     <div class="container mt-4">
         <div>
-            <h2>Equipamentos do Condomínio: {{ condominio.name }}</h2>
-            <a href="{% url 'equip' condominio.id %}">
-                + Adicionar Equipamento
-            </a>
-        </div>
-
-        <div>
-            <div>
-                <h5>Resumo</h5>
+                <h2>{{ condominio.name }}</h2>
+                <div>
+                <h3>Equipamentos</h3>
+                <a href="{% url 'equip' condominio.id %}">
+                    + Adicionar Equipamento
+                </a>
             </div>
+
             <div>
                 <p><strong>Total de Equipamentos:</strong> {{ condominio.itens_facial.count|add:condominio.itens_dvr.count|add:condominio.itens_outro.count }}</p> <!-- soma e mostra os equipamentos -->
                 <p><strong>Controladoras Faciais:</strong> {{ faciais.count }}</p>
                 <p><strong>DVRs/NVRs:</strong> {{ dvr.count }}</p>
                 <p><strong>Outros Equipamentos:</strong> {{ outro.count }}</p>
             </div>
-        </div>
 
         <!-- Controladoras Faciais --> 
-        {% if faciais %}
-        <div>
-            <div>
-                <h5>Controladoras Faciais ({{ faciais.count }})</h5>
-            </div>
+            {% if faciais %}
             <div>
                 <div>
+                    <h5>Controladoras Faciais ({{ faciais.count }})</h5>
+                </div>
+                <div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>IP Local</th>
+                                    <th>Link</th>
+                                    <th>Usuário</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for facial in faciais %}
+                                <tr>
+                                    <td>{{ facial.item }}</td>
+                                    <td>{{ facial.iplocal }}</td>
+                                    <td>{{ facial.link }}</td>
+                                    <td>{{ facial.user }}</td>
+                                    <td>{{ facial.data|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- DVRs/NVRs -->
+            {% if dvr %}
+            <div>
+                <div>
+                    <h5>DVRs/NVRs ({{ dvr.count }})</h5>
+                </div>
+                <div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>IP Local</th>
+                                    <th>Porta RTSP</th>
+                                    <th>Porta HTTP</th>
+                                    <th>Usuário</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dvr in dvr %}
+                                <tr>
+                                    <td>{{ dvr.item }}</td>
+                                    <td>{{ dvr.iplocal }}</td>
+                                    <td>{{ dvr.rtsp }}</td>
+                                    <td>{{ dvr.http }}</td>
+                                    <td>{{ dvr.user }}</td>
+                                    <td>{{ dvr.data|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Outros Equipamentos -->
+            {% if outro %}
+            <div>
+                <div>
+                    <h5>Outros Equipamentos ({{ outro.count }})</h5>
+                </div>
+                <div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>IP Local</th>
+                                    <th>Porta RTSP</th>
+                                    <th>Porta HTTP</th>
+                                    <th>Descrição</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for outro in outro %}
+                                <tr>
+                                    <td>{{ outro.item }}</td>
+                                    <td>{{ outro.iplocal }}</td>
+                                    <td>{{ outro.rtsp }}</td>
+                                    <td>{{ outro.http }}</td>
+                                    <td>{{ outro.desc }}</td>
+                                    <td>{{ outro.data|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not faciais and not dvr and not outro %}
+            <div>
+                Nenhum equipamento cadastrado para este condomínio.
+                <a href="{% url 'equip' condominio.id %}">
+                    Clique aqui para adicionar o primeiro equipamento.
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <h3>RELATOS</h2>
+            <div>
+                <p><strong>Total de Relatos:</strong> {{ relatos.count }}</p>
+                {% if relatos %}
+                    {% for relato in relatos %}
                     <table>
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th>IP Local</th>
-                                <th>Link</th>
-                                <th>Usuário</th>
+                                <th>Descrição do relato</th>
+                                <th>Aplicativo</th>
+                                <th>Categoria do relato</th>
                                 <th>Data</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for facial in faciais %}
                             <tr>
-                                <td>{{ facial.item }}</td>
-                                <td>{{ facial.iplocal }}</td>
-                                <td>{{ facial.link }}</td>
-                                <td>{{ facial.user }}</td>
-                                <td>{{ facial.data|date:"d/m/Y H:i" }}</td>
+                                <td>{{ relato.relato }}</td>
+
+                                {% if relato.tipo_relato_id == 1 %}
+                                    <td>Ayel</td>
+                                {% elif relato.tipo_relato_id == 2 %}
+                                    <td>Ayel Câmeras</td>
+                                {% else %}
+                                    <td>N/A</td>
+                                {% endif %}
+
+                                {% if relato.tipo_relato_id == 1 %}
+                                    {% if relato.cat_rel_ayel_id == 1 %}<td>Aberturas</td>
+                                    {% elif relato.cat_rel_ayel_id == 2 %}<td>Câmeras</td>
+                                    {% elif relato.cat_rel_ayel_id == 3 %}<td>Cadastro no App</td>
+                                    {% elif relato.cat_rel_ayel_id == 4 %}<td>Interfonia</td>
+                                    {% endif %}
+                                {% elif relato.tipo_relato_id == 2 %}
+                                    {% if relato.cat_rel_cam_id == 1 %}<td>Login</td>
+                                    {% elif relato.cat_rel_cam_id == 2 %}<td>Câmeras</td>
+                                    {% elif relato.cat_rel_cam_id == 3 %}<td>Cadastro no App</td>
+                                    {% endif %}
+                                {% else %}
+                                    <td>N/A</td>
+                                {% endif %}
+                                <td>{{ relato.data_local }}</td>
                             </tr>
-                            {% endfor %}
                         </tbody>
                     </table>
-                </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
-        {% endif %}
-
-        <!-- DVRs/NVRs -->
-        {% if dvr %}
         <div>
-            <div>
-                <h5>DVRs/NVRs ({{ dvr.count }})</h5>
-            </div>
-            <div>
-                <div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>IP Local</th>
-                                <th>Porta RTSP</th>
-                                <th>Porta HTTP</th>
-                                <th>Usuário</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for dvr in dvr %}
-                            <tr>
-                                <td>{{ dvr.item }}</td>
-                                <td>{{ dvr.iplocal }}</td>
-                                <td>{{ dvr.rtsp }}</td>
-                                <td>{{ dvr.http }}</td>
-                                <td>{{ dvr.user }}</td>
-                                <td>{{ dvr.data|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <a href="{% url 'listar_conds' %}"><button>Voltar</button></a>
+            <a href="{% url 'home' %}"><button>Home</button></a>
         </div>
-        {% endif %}
-
-        <!-- Outros Equipamentos -->
-        {% if outro %}
-        <div>
-            <div>
-                <h5>Outros Equipamentos ({{ outro.count }})</h5>
-            </div>
-            <div>
-                <div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>IP Local</th>
-                                <th>Porta RTSP</th>
-                                <th>Porta HTTP</th>
-                                <th>Descrição</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for outro in outro %}
-                            <tr>
-                                <td>{{ outro.item }}</td>
-                                <td>{{ outro.iplocal }}</td>
-                                <td>{{ outro.rtsp }}</td>
-                                <td>{{ outro.http }}</td>
-                                <td>{{ outro.desc }}</td>
-                                <td>{{ outro.data|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if not faciais and not dvr and not outro %}
-        <div>
-            Nenhum equipamento cadastrado para este condomínio.
-            <a href="{% url 'equip' condominio.id %}">
-                Clique aqui para adicionar o primeiro equipamento.
-            </a>
-        </div>
-        {% endif %}
     </div>
 </body>
 </html>

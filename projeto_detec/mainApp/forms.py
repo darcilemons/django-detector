@@ -140,14 +140,20 @@ class OutroForm(forms.ModelForm):
 class RelatoForm(forms.ModelForm):
     class Meta:
         model = Relatos
-        fields = ['cond_id', 'relato']
+        fields = ['relato', 'tipo_relato', 'cat_rel_ayel', 'cat_rel_cam']
         widgets = {
-            'cond_id': forms.TextInput(attrs={
+            'relato': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Condomínio'
+                'placeholder': 'Descreva o relato',
+                'rows': 4
             }),
-            'relato': forms.TextInput(attrs={
+            'tipo_relato': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Relato'
+            }),
+            'cat_rel_ayel': forms.TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'cat_rel_cam': forms.TextInput(attrs={
+                'class': 'form-control',
             })
         }
