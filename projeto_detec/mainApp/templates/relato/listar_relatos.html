@@ -9,6 +9,44 @@
     <h1>Todos os relatos</h1>
     {% if relatos %}
         <p>Total de relatos: {{ relatos.count }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Relato</th>
+                    <th>Aplicativo</th>
+                    <th>Categoria</th>
+                    <th>Condomínio</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for relato in relatos %}
+                        <td>{{ relato.relato }}</td>
+                        {% if relato.tipo_relato_id == 1 %}
+                        <td>Ayel</td>
+                        {% elif relato.tipo_relato_id == 2 %}
+                        <td>Ayel Câmeras</td>
+                        {% endif %}
+
+                        {% if relato.cat_rel_ayel_id %}
+                            {% if relato.cat_rel_ayel_id == 1 %}
+                                <td>Aberturas</td>
+                            {% elif relato.cat_rel_ayel_id == 2 %}
+                                <td>Câmeras</td>
+                            {% elif relato.cat_rel_ayel_id == 3 %}
+                                <td>Cadastro</td>
+                            {% elif relato.cat_rel_ayel_id == 4 %}
+                                <td>Interfonia</td>
+                            {% endif %}
+                        {% endif %}
+                        <td></td>
+                        <td>{{ relato.data }}</td>
+                </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        
     {% else %}
         Nenhum relato cadastrado.
         <a href="{% url 'main_relato' %}"><button>Cadastrar relato</button></a>

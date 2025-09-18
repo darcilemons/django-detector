@@ -98,7 +98,6 @@ def relato(request, condominio_id):
             # Busca pelo ID, não pelo nome
             tipo_relato = TipoRelato.objects.get(id=tipo_relato_id)
             
-            # Salva o ID na sessão para uso posterior
             request.session['tipo_relato_id'] = tipo_relato_id
             
             # Redireciona usando o NOME do tipo (que está na URL)

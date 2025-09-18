@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <title>PÁGINA PRINCIPAL</title>
     <style>
         body{
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: #181c34;
+            color: white;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 20px;
         }
 
         #menu-toggle{
@@ -18,7 +28,7 @@
         .menu-btn{
             position: fixed;
             top: 20px;
-            left: 20px;
+            left: 15px;
             width: 30px;
             height: 22px;
             cursor: pointer;
@@ -31,8 +41,8 @@
         .menu-btn span{
             display: block;
             height: 3px;
-            width: 100%;
-            background: #1a2041;
+            width: 30px;
+            background: #fff;
             border-radius: 3px;
             transition: 0.3s;
         }
@@ -40,24 +50,45 @@
         .slide-menu{
             position: fixed;
             top: 0;
-            left: -250px;
+            left: -190px;
             width: 250px;
             height: 100%;
             background: #1a2041;
             color: white;
             transition: left 0.3s ease;
-            padding-top: 60px;
+            padding-top: 40px;
             z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
         }
 
         .slide-menu ul, li{
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0);
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
         }
 
-        .slide-menu ul,li:hover{
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
             background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
         }
 
         .overlay{
@@ -80,39 +111,102 @@
         #menu-toggle:checked ~ .overlay{
             opacity: 1;
             pointer-events: auto;
+
         }
 
-        #menu-toggle:checked + .menu-btn span:nth-child(1){
-            transform: rotate(45deg) translate(13px);
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
             background: #fff;
         }
         #menu-toggle:checked + .menu-btn span:nth-child(2){
             opacity: 0;
         }
         #menu-toggle:checked + .menu-btn span:nth-child(3){
-            transform: rotate(-45deg) translate(13px);
+            transform: rotate(-45deg) translate(5px, -8px);
             background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+
+        #title{
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 40px;
+        }
+
+        #btn{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            width: 100%;
+        }
+
+        #btn a{
+            text-decoration: none;
+            color: black;
+            
+        }
+
+        a.home-btn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-size: 20px;
+            background: white;
+            height: 60px;
+            width: 300px;
+            border-radius: 70px;
+            text-align: center;
+            box-shadow: 2px 2px 10px black;
+            transform-origin: center;
+        }
+
+        a.home-btn:hover{
+            box-shadow: 0px 0px 0px black;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <input type="checkbox" id="menu-toggle">
+    <div id="container">
+        <div id="title">PÁGINA INICIAL</div>
+        
+        <div id="btn">
+            <a href="{% url 'cadastrar_condominio' %}" class="home-btn">+ CONDOMÍNIO</a>
+            <a href="{% url 'main_relato' %}" class="home-btn">+ RELATO</a>
+        </div>
 
-    <label for="menu-toggle" class="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
+        <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
 
-    <div class="slide-menu">
-        <ul>
-            <h2><a href="{% url 'cadastrar_condominio' %}"><button>Cadastrar condomínio</button></a></h2>
-            <h2><a href="{% url 'listar_conds' %}"><button>Condomínios cadastrados</button></a></h2>
-            <h2><a href="{% url 'listar_relatos' %}"><button>Relatos</button></a></h2>
-            <h2><a href=""><button>Dahsboard</button></a></h2>
-        </ul>
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="" class="side-btn"><li>Dahsboard</li></a>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <div class="overlay"></div>
 </body>
 </html>
