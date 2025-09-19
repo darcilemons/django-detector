@@ -6,6 +6,9 @@ class Conds(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     endereco = models.CharField(max_length=200)
     
+    def __str__(self):
+        return self.name
+    
     def total_equipamentos(self):
         return (self.itens_facial.count() + 
                 self.itens_dvr.count() + 
@@ -42,11 +45,11 @@ class Itens_facial(models.Model):
     item = models.CharField(max_length=100, verbose_name="Item")
     iplocal = models.CharField(max_length=15, verbose_name="IP Local")
     link = models.CharField(max_length=100, verbose_name="Link de acesso")
-    mac = models.CharField(max_length=17, default="n/a", verbose_name="Endereço MAC")
-    http = models.PositiveIntegerField(default="n/a", verbose_name="Porta HTTP")
-    user = models.CharField(max_length=50, default="n/a", verbose_name="Usuário")
-    senha = models.CharField(max_length=50, default="n/a", verbose_name="Senha")
-    desc = models.CharField(max_length=100, default="n/a", verbose_name="Descrição")
+    mac = models.CharField(max_length=17, verbose_name="Endereço MAC")
+    http = models.PositiveIntegerField(max_length=4, verbose_name="Porta HTTP")
+    user = models.CharField(max_length=50, verbose_name="Usuário")
+    senha = models.CharField(max_length=50, verbose_name="Senha")
+    desc = models.CharField(max_length=100, verbose_name="Descrição")
     data = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
@@ -57,12 +60,12 @@ class Itens_dvr(models.Model):
     item = models.CharField(max_length=100, verbose_name="Item")
     iplocal = models.CharField(max_length=15, verbose_name="IP Local")
     link = models.CharField(max_length=100, verbose_name="Link de acesso")
-    mac = models.CharField(max_length=17, default="n/a", verbose_name="Endereço MAC")
-    rtsp = models.PositiveIntegerField(default="n/a", verbose_name="Porta RTSP")
-    http = models.PositiveIntegerField(default="n/a", verbose_name="Porta HTTP")
-    user = models.CharField(max_length=50, default="n/a", verbose_name="Usuário")
-    senha = models.CharField(max_length=50, default="n/a", verbose_name="Senha")
-    desc = models.CharField(max_length=100, default="n/a", verbose_name="Descrição")
+    mac = models.CharField(max_length=17, verbose_name="Endereço MAC")
+    rtsp = models.PositiveIntegerField(max_length=4, verbose_name="Porta RTSP")
+    http = models.PositiveIntegerField(max_length=4, verbose_name="Porta HTTP")
+    user = models.CharField(max_length=50, verbose_name="Usuário")
+    senha = models.CharField(max_length=50, verbose_name="Senha")
+    desc = models.CharField(max_length=100, verbose_name="Descrição")
     data = models.DateTimeField(default=timezone.now)
     
     def __str__(self):

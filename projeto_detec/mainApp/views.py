@@ -17,6 +17,10 @@ def cad_cond(request):
     
     return render(request, 'conds_cad.html', {'form': form})
 
+def home_equip(request):
+    conds = Conds.objects.all()
+    return render(request, 'home_equip.html', {'conds': conds})
+
 def equip(request, condominio_id):
     condominio = get_object_or_404(Conds, id=condominio_id)
     
@@ -82,7 +86,9 @@ def detail_conds(request, condominio_id):
     
 def listar_relatos(request):
     relatos = Relatos.objects.all()
-    return render(request, 'relato/listar_relatos.html', {'relatos': relatos})
+    context = {'relatos': relatos}
+    
+    return render(request, 'relato/listar_relatos.html', context)
 
 def main_relato(request):
     cond = Conds.objects.all()

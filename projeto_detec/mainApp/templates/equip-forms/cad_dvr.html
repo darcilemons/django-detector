@@ -12,6 +12,13 @@
             {{ form.as_p }}
         </div>
         <button type="submit">Salvar equipamento</button>
+        <button onClick="goBack()">Voltar</button>
     </form>
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

@@ -23,10 +23,14 @@
 
                     <button type="submit">Salvar Condomínio</button>
                 </form>
-                <button><a href="{% url 'listar_conds' %}">Condomínios</a></button>
             </div>
         </div>
     </div>
-    <button><a href="{% url 'home' %}">Voltar</a></button>
+    <button onClick="goBack()">Voltar</button>
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

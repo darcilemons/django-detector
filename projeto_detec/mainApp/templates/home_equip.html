@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQUIPAMENTOS</title>
+</head>
+<body>
+    <h2>Selecione o condomínio que deseja adicionar o equipamento</h2>
+    {% for conds in conds %}
+        <p><a href="{% url 'equip' conds.id %}">{{ conds.name }}</a></p>
+    {% endfor %}
+
+    <button onClick="goBack()">Voltar</button>
+
+    <script>
+        function goBack() { // função para voltar para a home page
+        window.history.back();
+    }
+    </script>
+</body>
+</html>

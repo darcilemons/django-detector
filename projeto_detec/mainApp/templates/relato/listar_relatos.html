@@ -39,8 +39,18 @@
                             {% elif relato.cat_rel_ayel_id == 4 %}
                                 <td>Interfonia</td>
                             {% endif %}
+                        {% else %}
+                            {% if relato.cat_rel_cam_id %}
+                                {% if relato.cat_rel_cam_id == 1 %}
+                                    <td>Login</td>
+                                {% elif relato.cat_rel_cam_id == 2 %}
+                                    <td>Câmeras</td>
+                                {% elif relato.cat_rel_cam_id == 3 %}
+                                    <td>Cadastro</td>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
-                        <td></td>
+                        <td>{{ relato.cond_id.name }}</td>
                         <td>{{ relato.data }}</td>
                 </tr>
                     {% endfor %}

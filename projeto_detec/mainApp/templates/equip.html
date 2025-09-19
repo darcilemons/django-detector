@@ -5,7 +5,6 @@
 </head>
 <body>
     <div>
-        <h2>Cadastrar Equipamento - {{ condominio.name }}</h2>
         
 <form method="post">
     {% csrf_token %}
@@ -29,7 +28,13 @@
     <button type="submit">Continuar</button>
 </form>
 
-    <a href="{% url 'home' %}"><button>Voltar</button></a>
+    <a onClick="goBack()"><button>Voltar</button></a>
     </div>
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </body>
 </html>
