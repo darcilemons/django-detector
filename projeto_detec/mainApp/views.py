@@ -90,6 +90,31 @@ def listar_relatos(request):
     
     return render(request, 'relato/listar_relatos.html', context)
 
+def listar_equips(request):
+    facial = Itens_facial.objects.all()
+    dvr = Itens_dvr.objects.all()
+    outro = Itens_outro.objects.all()
+    
+    for item in facial:
+        item.tipo = 'Facial'
+        
+    for item in dvr:
+        item.tipo = 'DVR/NVR'
+        
+    for item in outro:
+        item.tipo = 'Outro'
+        
+    itens = list(facial) + list(dvr) + list(outro)
+    
+    context = {
+        'facial': facial,
+        'dvr': dvr,
+        'outro': outro,
+        'itens': itens
+    }
+    
+    return render(request, 'equip-forms/listar_equips.html', context)
+
 def main_relato(request):
     cond = Conds.objects.all()
     return render(request, 'relato/main_relato.html', {'conds': cond})

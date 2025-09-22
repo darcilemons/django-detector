@@ -31,7 +31,6 @@
         }
         .tr-itens{
             height: 40px;
-            border-bottom: 1px solid #0c0f20;
         }
 
         .td-relato{
@@ -47,22 +46,214 @@
             width: 150px;
             text-align: center;
         }
-
-        .td-cond{
-            width: 200px;
-            text-align: left;
+        
+        td{
+            border-bottom: 1px solid #181c34;
         }
+
+        .td-condname{
+            text-align: center;
+            width: 150px;
+        }
+
+        .td-data{
+            text-align: center;
+            width: 260px;
+        }
+
+        #home-btn a{
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            height: 50px;
+            width: 80px;
+            text-align: center;
+            align-content: center;
+            border-radius: 15px;
+            position: fixed;
+        }
+
+        #home-btn a:hover{
+            background: rgb(18, 21, 47);
+        }
+
+        #cabecalho{
+            display: flex;
+            justify-content: center;
+            font-size: 35px;
+        }
+
+        #menu-toggle{
+            display: none;
+        }
+
+        .menu-btn{
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-btn span{
+            display: block;
+            height: 3px;
+            width: 30px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .slide-menu{
+            position: fixed;
+            top: 0;
+            left: -190px;
+            width: 250px;
+            height: 100%;
+            background: #1a2041;
+            color: white;
+            transition: left 0.3s ease;
+            padding-top: 40px;
+            z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
+        }
+
+        .slide-menu ul, li{
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
+        }
+
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        #menu-toggle:checked ~ .slide-menu{
+            left: 0;
+        }
+
+        #menu-toggle:checked ~ .overlay{
+            opacity: 1;
+            pointer-events: auto;
+
+        }
+
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
+            background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+            opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+            transform: rotate(-45deg) translate(5px, -8px);
+            background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+        p{
+            margin-bottom: 25px;
+        }
+
+        a.home-btn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-size: 20px;
+            background: white;
+            height: 50px;
+            width: 200px;
+            border-radius: 70px;
+            text-align: center;
+            box-shadow: 2px 2px 10px black;
+            transform-origin: center;
+            text-decoration: none;
+            color: black;
+            margin-bottom: 25px;
+        }
+        a.home-btn:hover{
+            box-shadow: 0px 0px 0px black;
+            transform: scale(1.1);
+        }
+        
     </style>
 </head>
 <body>
-    <div id="home-btn">
-        <a href="{% url 'home' %}"><button>Home</button></a>
-    </div>
 
     <div id="container">
-    <h1>Todos os relatos</h1>
+        <h1 id="cabecalho">RELATOS</h1>
+        <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
+
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                </ul>
+            </div>
+        </div>
+
     {% if relatos %}
         <p>Total de relatos: {{ relatos.count }}</p>
+        <a href="{% url 'main_relato' %}" class="home-btn">+ Relato</a>
         <table>
             <thead>
                 <tr class="tr-head">
@@ -104,8 +295,8 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                        <td>{{ relato.cond_id.name }}</td>
-                        <td>{{ relato.data }}</td>
+                        <td class="td-condname">{{ relato.cond_id.name }}</td>
+                        <td class="td-data">{{ relato.data }}</td>
                 </tr>
                     {% endfor %}
             </tbody>
@@ -113,7 +304,7 @@
         
     {% else %}
         Nenhum relato cadastrado.
-        <a href="{% url 'main_relato' %}"><button>Cadastrar relato</button></a>
+        <a href="{% url 'main_relato' %}">+ Relato</a>
     {% endif %}
     </div>
 

@@ -7,18 +7,25 @@ class condsForm(forms.ModelForm):
         fields = ['name', 'endereco']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o nome do condomínio'
+                'class': 'form-control'
             }),
             'endereco': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Endereço'
+                'class': 'form-control'
             })
         }
+        
         labels = {
-            'name': 'Condomínio',
+            'name': 'Nome do condomínio',
             'endereco': 'Endereço'
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field_name, field in self.fields.items():
+            if hasattr(field, 'label') and field.label:
+                # Remove os dois pontos e espaços extras
+                field.label = field.label.rstrip(': ')
         
 class FacialForm(forms.ModelForm):
     class Meta:

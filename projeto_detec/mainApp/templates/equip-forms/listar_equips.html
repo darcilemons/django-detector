@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cadastro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <style>
         body{
             margin: 0;
             font-family: Arial, sans-serif;
             background: #181c34;
             color: white;
+        }
+        #container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
         }
 
         #menu-toggle{
@@ -128,104 +137,65 @@
             cursor: pointer;
         }
 
+        p{
+            font-size: 18px;
+            text-align: center;
+        }
+
+        table{
+            background: #2d345b;
+            box-shadow: 2px 2px 10px #0c0f20;
+            border-radius: 5px;
+            border-collapse: collapse;
+        }
+
+        .tr-head{
+            background: #181c34;
+        }
+
+        .td-item{
+            width: 150px;
+            text-align: center;
+            height: 35px;
+        }
+        .td-tipo{
+            width: 180px;
+            text-align: center;
+        }
+        
+        td{
+            border-bottom: 1px solid #181c34;
+        }
+
+        .td-condname{
+            text-align: center;
+            width: 250px;
+        }
+        .td-condname:hover{
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .td-data{
+            text-align: center;
+            width: 260px;
+        }
+
+        a{
+            text-decoration: none;
+            color: white;
+        }
+
         .title{
             font-size: 35px;
-            text-align: left;
         }
-
-        form {
-            margin: 20px auto;
-            border-radius: 12px;
-            background: #141727;
-            width: 500px;
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ESTILO PARA OS GRUPOS DE FORMULÁRIO */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 25px;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        /* Labels */
-        .form-group label {
-            text-transform: uppercase;
-            font-size: 15px;
-            margin-top: 20px;
-            margin-bottom: 5px;
-            color: #fff;
-            width: 100%;
-            text-align: left;
-        }
-
-        /* Inputs */
-        .form-group input {
-            padding: 12px;
-            border-radius: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            background: #313551;
-            color: white;
-            font-size: 16px;
-            border: none;
-            margin: 0 auto;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            background: #343a6b;
-        }
-
-        .save-btn{
-            background: white;
-            font-size: 18px;
-            width: 200px;
-            height: 50px;
-            margin-bottom: 22px;
-            border-radius: 30px;
-        }
-
-        .save-btn:hover{
-            cursor: pointer;
-        }
-
-        .btn-home p{
-            margin: 0 420px;
-            padding: 20px 10px;
-            font-size: 14px;
-            background: #181c34;
-            color: white;
-            text-align: center;
-            position: fixed;
-            border-radius: 18px;
-        }
-
-        .btn-home p:hover{
-            cursor: pointer;
-            background: #313551;
-        }
-
-        /* Estilos específicos para cada campo 
-        #id_name {
-        }
-        #id_endereco {
-        }
-        */
-
 
     </style>
 </head>
 <body>
     <div id="container">
-        <div class="btn-home">
-            <p onClick="goBack()">VOLTAR</p>
-        </div>
+        <p class="title">EQUIPAMENTOS</p>
+        <p>Total de equipamentos: {{ facial.count|add:dvr.count|add:outro.count }}</p>
 
         <div id="bar">
             <input type="checkbox" id="menu-toggle">
@@ -245,29 +215,31 @@
                 </ul>
             </div>
         </div>
-            <div>
-                <form method="post">
-                    <h1 class="title">Condomínio</h1>
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="{{ form.name.id_for_label }}" class="label-name">{{ form.name.label }}</label>
-                        {{ form.name }}
-                    </div>
-    
-                    <div class="form-group">
-                        <label for="{{ form.endereco.id_for_label }}" class="label-endereco">{{ form.endereco.label }}</label>
-                        {{ form.endereco }}
-                    </div>
 
-                    <button type="submit" class="save-btn">SALVAR</button>
-                </form>
-            </div>
-            
+            <table>
+                <thead>
+                    <tr class="tr-head">
+                        <th>Equipamento</th>
+                        <th>Tipo</th>
+                        <th>Condomínio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item_data in itens %}
+                        <tr class="tr-itens"></tr>
+                            {% if item_data %}
+                                <td class="td-item">{{ item_data.item }}</td>
+                                <td class="td-tipo">{{ item_data.tipo }}</td>
+                                <td class="td-condname">
+                                    <a href="{% url 'detail_conds' item_data.cond_id.id %}">{{ item_data.cond_id.name }}</a>
+                                </td>
+                            {% else %}
+                                <p>Nenhum equipamento encontrado.</p>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
     </div>
-    <script>
-        function goBack(){
-            window.history.back();
-        }
-    </script>
 </body>
 </html>

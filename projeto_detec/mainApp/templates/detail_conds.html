@@ -190,9 +190,15 @@
             </div>
         </div>
         <div>
-            <a href="{% url 'listar_conds' %}"><button>Voltar</button></a>
+            <a onClick="goBack()"><button>Voltar</button></a>
             <a href="{% url 'home' %}"><button>Home</button></a>
         </div>
     </div>
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </body>
 </html>
