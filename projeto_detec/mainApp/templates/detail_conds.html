@@ -1,131 +1,341 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <title>DETALHES {{ condominio.name }}</title>
+    <style>
+
+        body{
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #181c34;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #menu-toggle{
+            display: none;
+        }
+        
+        .menu-btn{
+        position: fixed;
+        top: 20px;
+        left: 15px;
+        width: 30px;
+        height: 22px;
+        cursor: pointer;
+        z-index: 1002;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        }
+        
+        .menu-btn span{
+        display: block;
+        height: 3px;
+        width: 30px;
+        background: #fff;
+        border-radius: 3px;
+        transition: 0.3s;
+        }
+        
+        .slide-menu{
+        position: fixed;
+        top: 0;
+        left: -190px;
+        width: 250px;
+        height: 100%;
+        background: #1a2041;
+        color: white;
+        transition: left 0.3s ease;
+        padding-top: 40px;
+        z-index: 1001;
+        box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+        box-shadow: 0px 0px 0px ;
+        }
+        
+        .slide-menu ul, li{
+        padding-top: 10px;
+        padding-left: 5px;
+        padding-right: 60px;
+        padding-bottom: 10px;
+        }
+        
+        .slide-menu ul{
+        align-content: space-evenly;
+        }
+        
+        #menu-toggle:checked ~ .slide-menu ul, li{
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        }
+        
+        .slide-menu li:hover{
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        }
+        .slide-menu ul{
+        list-style-type: none;
+        }
+        
+        .overlay{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 1000;
+        }
+        
+        #menu-toggle:checked ~ .slide-menu{
+        left: 0;
+        }
+        
+        #menu-toggle:checked ~ .overlay{
+        opacity: 1;
+        pointer-events: auto;
+        
+        }
+        
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+        transform: rotate(45deg) translate(5px, 8px);
+        background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+        opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+        transform: rotate(-45deg) translate(5px, -8px);
+        background: #fff;
+        }
+        
+        .side-btn{
+        background: none;
+        border: none;
+        color: white;
+        text-align: left;
+        text-decoration: none;
+        font-size: 18px;
+        }
+
+        .equips {
+            text-align: left;
+            width: 80%;
+        }
+
+        .total-main {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+        }
+
+        .equip-facial {
+            max-width: 1300px;
+        }
+
+        table {
+            background: #2d345b;
+            box-shadow: 2px 2px 10px #0c0f20;
+            border-radius: 5px;
+            border-collapse: collapse;
+            max-width: 1300px;
+        }
+
+        .tr-head {
+            background: #181c34;
+        }
+
+        .tr-itens{
+            height: 40px;
+        }
+
+        td{
+            border-bottom: 1px solid #181c34;
+            position: relative;
+        }
+
+        .td-link {
+            width: 200px;
+            margin: 0 auto;
+            padding: 10px 25px;
+
+            overflow-wrap: anywhere;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .td-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .td-sm {
+            width: 150px;
+            text-align: center;
+        }
+
+        .td-md {
+            text-align: center;
+        }
+
+        .td-bg {
+            width: 200px;
+            text-align: center;
+        }
+
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <div>
-                <h2>{{ condominio.name }}</h2>
-                <div>
-                <h3>Equipamentos</h3>
-                <a href="{% url 'equip' condominio.id %}">
-                    + Adicionar Equipamento
-                </a>
-            </div>
+    <div id="bar">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <label for="menu-toggle" class="overlay"></label>
 
-            <div>
-                <p><strong>Total de Equipamentos:</strong> {{ condominio.itens_facial.count|add:condominio.itens_dvr.count|add:condominio.itens_outro.count }}</p> <!-- soma e mostra os equipamentos -->
-                <p><strong>Controladoras Faciais:</strong> {{ faciais.count }}</p>
-                <p><strong>DVRs/NVRs:</strong> {{ dvr.count }}</p>
-                <p><strong>Outros Equipamentos:</strong> {{ outro.count }}</p>
+        <div class="slide-menu">
+            <ul>
+                <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                <a href="" class="side-btn"><li>Dashboard</li></a>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <a onClick="goBack()">VOLTAR</a>
+            
+            <h2>{{ condominio.name }}</h2>
+
+            <div class="equips">
+                <h3>Equipamentos</h3>
+                <p><a href="{% url 'equip' condominio.id %}">+ Adicionar Equipamento</a></p>
+
+                <strong>Total de Equipamentos:</strong> {{ condominio.itens_facial.count|add:condominio.itens_dvr.count|add:condominio.itens_outro.count }} <!-- soma e mostra os equipamentos -->
+                <div class="total-main">
+                </div>
             </div>
 
         <!-- Controladoras Faciais --> 
             {% if faciais %}
-            <div>
-                <div>
-                    <h5>Controladoras Faciais ({{ faciais.count }})</h5>
-                </div>
-                <div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>IP Local</th>
-                                    <th>Link</th>
-                                    <th>Usuário</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for facial in faciais %}
-                                <tr>
-                                    <td>{{ facial.item }}</td>
-                                    <td>{{ facial.iplocal }}</td>
-                                    <td>{{ facial.link }}</td>
-                                    <td>{{ facial.user }}</td>
-                                    <td>{{ facial.data|date:"d/m/Y H:i" }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <p class="title-equips">Faciais: {{ faciais.count }}</p>
+            <div class="equip-facial">
+                <table>
+                    <thead>
+                        <tr class="tr-head">
+                            <th>Item</th>
+                            <th>IP Local</th>
+                            <th>Link</th>
+                            <th>MAC</th>
+                            <th>Usuário</th>
+                            <th>Senha</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for facial in faciais %}
+                        <tr class="tr-itens">
+                            <td class="td-sm">{{ facial.item }}</td>
+                            <td class="td-sm">{{ facial.iplocal }}</td>
+                            <td class="td-sm"><a href="{{ facial.link }}" class="td-link">{{ facial.link }}</a></td>
+                            <td class="td-sm">{{ facial.mac }}</td>
+                            <td class="td-sm">{{ facial.user }}</td>
+                            <td class="td-sm">{{ facial.senha }}</td>
+                            <td class="td-bg">{{ facial.data|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
 
             <!-- DVRs/NVRs -->
             {% if dvr %}
-            <div>
-                <div>
-                    <h5>DVRs/NVRs ({{ dvr.count }})</h5>
-                </div>
-                <div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>IP Local</th>
-                                    <th>Porta RTSP</th>
-                                    <th>Porta HTTP</th>
-                                    <th>Usuário</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for dvr in dvr %}
-                                <tr>
-                                    <td>{{ dvr.item }}</td>
-                                    <td>{{ dvr.iplocal }}</td>
-                                    <td>{{ dvr.rtsp }}</td>
-                                    <td>{{ dvr.http }}</td>
-                                    <td>{{ dvr.user }}</td>
-                                    <td>{{ dvr.data|date:"d/m/Y H:i" }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <p class="title-equips">DVRs/NVRs {{ dvr.count }}</p>
+            <div class="equip-dvr">
+                <table>
+                    <thead>
+                        <tr class="tr-head">
+                            <th>Item</th>
+                            <th>IP Local</th>
+                            <th>Porta RTSP</th>
+                            <th>Link</th>
+                            <th>MAC</th>
+                            <th>Usuário</th>
+                            <th>Senha</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dvr in dvr %}
+                        <tr class="tr-itens">
+                            <td class="td-sm">{{ dvr.item }}</td>
+                            <td class="td-sm">{{ dvr.iplocal }}</td>
+                            <td class="td-sm">{{ dvr.rtsp }}</td>
+                            <td class="td-sm"><a href="{{ dvr.link }}" class="td-link">{{ dvr.link }}</a></td>
+                            <td class="td-sm">{{ dvr.mac }}</td>
+                            <td class="td-sm">{{ dvr.user }}</td>
+                            <td class="td-sm">{{ dvr.senha }}</td>
+                            <td class="td-bg">{{ dvr.data|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
 
             <!-- Outros Equipamentos -->
             {% if outro %}
+            <p class="title-equips">Outros Equipamentos {{ outro.count }}</p>
             <div>
-                <div>
-                    <h5>Outros Equipamentos ({{ outro.count }})</h5>
-                </div>
-                <div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>IP Local</th>
-                                    <th>Porta RTSP</th>
-                                    <th>Porta HTTP</th>
-                                    <th>Descrição</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for outro in outro %}
-                                <tr>
-                                    <td>{{ outro.item }}</td>
-                                    <td>{{ outro.iplocal }}</td>
-                                    <td>{{ outro.rtsp }}</td>
-                                    <td>{{ outro.http }}</td>
-                                    <td>{{ outro.desc }}</td>
-                                    <td>{{ outro.data|date:"d/m/Y H:i" }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="equip-outro">
+                    <table>
+                        <thead>
+                            <tr class="tr-head">
+                                <th>Item</th>
+                                <th>IP Local</th>
+                                <th>Porta RTSP</th>
+                                <th>Link</th>
+                                <th>MAC</th>
+                                <th>Usuário</th>
+                                <th>Senha</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for outro in outro %}
+                            <tr class="tr-itens">
+                                <td class="td-sm">{{ outro.item }}</td>
+                                <td class="td-sm">{{ outro.iplocal }}</td>
+                                <td class="td-sm">{{ outro.rtsp }}</td>
+                                <td class="td-sm"><a href="{{ outro.link }}" class="td-link">{{ outro.link }}</a></td>
+                                <td class="td-sm">{{ outro.mac }}</td>
+                                <td class="td-sm">{{ outro.user}}</td>
+                                <td class="td-sm">{{ outro.senha }}</td>
+                                <td class="td-bg">{{ outro.data|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             {% endif %}
@@ -138,7 +348,6 @@
                 </a>
             </div>
             {% endif %}
-        </div>
 
         <div>
             <h3>RELATOS</h2>
@@ -189,11 +398,10 @@
                 {% endif %}
             </div>
         </div>
+    </div>
         <div>
-            <a onClick="goBack()"><button>Voltar</button></a>
             <a href="{% url 'home' %}"><button>Home</button></a>
         </div>
-    </div>
 
     <script>
         function goBack(){

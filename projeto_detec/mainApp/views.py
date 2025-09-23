@@ -11,6 +11,7 @@ def cad_cond(request):
         form = condsForm(request.POST)
         if form.is_valid():
             condominio = form.save()
+            messages.success(request, 'Cadastro realizado com sucesso!')
             return redirect('equip', condominio_id=condominio.id)
     else:
         form = condsForm()
@@ -51,6 +52,7 @@ def cad_equip(request, condominio_id, tipo):
             equipamento = form.save(commit=False)
             equipamento.cond_id = condominio
             equipamento.save()
+            messages.success(request, 'Cadastro realizado com sucesso!')
             return redirect('cadastrar_condominio')
     else:
         form = form_class()
@@ -202,7 +204,6 @@ def cad_categoria(request, condominio_id, tipo_relato, cat_relato):
     try:
         tipo_relato_obj = TipoRelato.objects.get(nome=tipo_relato)
     except TipoRelato.DoesNotExist:
-        messages.error(request, f"Tipo de relato '{tipo_relato}' não encontrado.")
         return redirect('main_relato')
     
     # Recupera os objetos das categorias baseado no tipo

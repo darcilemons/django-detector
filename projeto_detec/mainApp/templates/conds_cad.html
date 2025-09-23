@@ -131,10 +131,11 @@
         .title{
             font-size: 35px;
             text-align: left;
+            margin-top: 30px;
         }
 
         form {
-            margin: 20px auto;
+            margin: 50px auto;
             border-radius: 12px;
             background: #141727;
             width: 500px;
@@ -187,7 +188,7 @@
             font-size: 18px;
             width: 200px;
             height: 50px;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
             border-radius: 30px;
         }
 
@@ -211,8 +212,6 @@
             background: #313551;
         }
 
-        
-
         /* Estilos específicos para cada campo 
         #id_name {
         }
@@ -220,10 +219,43 @@
         }
         */
 
+        .messages {
+            list-style: none;
+            padding: 0;
+        }
+
+        .alert {
+            text-align: center;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
 
     </style>
 </head>
 <body>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div id="container">
         <div class="btn-home">
             <p onClick="goBack()">VOLTAR</p>
@@ -242,6 +274,7 @@
                 <ul>
                     <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
                     <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
                     <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
                     <a href="" class="side-btn"><li>Dashboard</li></a>
                 </ul>
@@ -278,6 +311,14 @@
                 window.location.href = '/';
             }
         }
+
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+
     </script>
 </body>
 </html>
