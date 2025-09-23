@@ -9,7 +9,6 @@
 <form method="post">
     {% csrf_token %}
     <h3>Selecione o tipo de equipamento para {{ condominio.name }}</h3>
-    
     <div>
         <input type="radio" name="tipo_equipamento" value="FACIAL" id="facial">
         <label for="facial">Controladora Facial</label>

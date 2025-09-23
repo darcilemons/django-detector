@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Equipamentos</title>
     <style>
         body{
             margin: 0;
@@ -165,11 +165,19 @@
         
         td{
             border-bottom: 1px solid #181c34;
+            position: relative;
+            padding: 0px !important;
         }
 
         .td-condname{
+            width: 300px;
+            margin: 0 auto;
+            padding: 10px 25px;
+
             text-align: center;
-            width: 250px;
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
         .td-condname:hover{
             background: rgba(255, 255, 255, 0.1);
@@ -230,8 +238,8 @@
                             {% if item_data %}
                                 <td class="td-item">{{ item_data.item }}</td>
                                 <td class="td-tipo">{{ item_data.tipo }}</td>
-                                <td class="td-condname">
-                                    <a href="{% url 'detail_conds' item_data.cond_id.id %}">{{ item_data.cond_id.name }}</a>
+                                <td>
+                                    <a href="{% url 'detail_conds' item_data.cond_id.id %}" class="td-condname">{{ item_data.cond_id.name }}</a>
                                 </td>
                             {% else %}
                                 <p>Nenhum equipamento encontrado.</p>

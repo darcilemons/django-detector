@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>RELATOS</title>
+    <title>Relatos</title>
 </head>
 <style>
     body{
@@ -142,38 +142,27 @@
         table{
             background: #2d345b;
             box-shadow: 2px 2px 10px #0c0f20;
-            border-radius: 5px;
+            border-radius: 10px;
             border-collapse: collapse;
-        }
-
-        th{
-            background: #181c34;
+            width: 50%;
         }
 
         .cond-name{
-            padding: 10px 0px  10px 5px;
-            height: 20px;
-            width: 800px;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 20px;
         }
 
         td{
             border-bottom: 1px solid #181c34;
+            padding: 0px !important;
             position: relative;
-            padding: 13px !important;
-        }
-
-        .cond-name {
-            display: block;
-            padding: 12px;
-            margin: -12px;
-            text-decoration: none;
-            color: inherit;
-            height: 100%;
+            border-radius: 10px;
         }
 
         .cond-name:hover {
             text-decoration: none;
-            color: inherit;
         }
 
         .tr-conds:hover {
@@ -182,7 +171,6 @@
 
         .back-btn{
             text-decoration: none;
-            margin: 0 200px;
             padding: 20px 10px;
             font-size: 14px;
             background: #181c34;
@@ -222,9 +210,19 @@
             text-align: left;
         }
 
+        #legenda {
+            font-size: 20px;
+            width: 50%;
+            text-align: left;
+        }
+
+        #divbtn {
+            width: 60%;
+        }
+
 </style>
 <body>
-        <div id="bar">
+    <div id="bar">
             <input type="checkbox" id="menu-toggle">
             <label for="menu-toggle" class="menu-btn">
                 <span></span>
@@ -242,18 +240,18 @@
                     <a href="" class="side-btn"><li>Dashboard</li></a>
                 </ul>
             </div>
-        </div>
-        <a href="{% url 'home' %}" class="back-btn">VOLTAR</a>
-        
+    </div>
+
     <div id="container">
+        <div id="divbtn">
+            <a href="{% url 'home' %}" class="back-btn">VOLTAR</a>
+        </div>
+
         <h1 class="title">RELATO</h1>
-        <h2>Selecione o condomínio</h2>
+        <p id="legenda">Selecione o condomínio</p>
         {% if conds %}
             <table>
                 <thead>
-                    <tr>
-                        <th>Nome</th>
-                    </tr>
                 </thead>
                 <tbody>
                     {% for conds in conds %}
