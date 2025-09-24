@@ -4,6 +4,11 @@
     <title>DETALHES {{ condominio.name }}</title>
     <style>
 
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body{
             margin: 0;
             font-family: Arial, sans-serif;
@@ -12,6 +17,16 @@
         }
 
         .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .container-relatos {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -135,12 +150,8 @@
         .equips {
             text-align: left;
             width: 80%;
-        }
-
-        .total-main {
-            display: flex;
-            justify-content: center;
-            gap: 100px;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
 
         .equip-facial {
@@ -152,7 +163,9 @@
             box-shadow: 2px 2px 10px #0c0f20;
             border-radius: 5px;
             border-collapse: collapse;
-            max-width: 1300px;
+            max-width: 100%;
+            overflow-x: auto;
+            display: block;
         }
 
         .tr-head {
@@ -199,6 +212,69 @@
             text-align: center;
         }
 
+        .td-relato {
+            width: 500px;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .title-equips {
+            padding: 10px;
+            display: flex;
+            align-self: flex-start;
+            width: 100%;
+            margin-left: 10%;
+        }
+
+        .title-sec {
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .title-main {
+            margin-top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .btn-home p{
+            margin: 10px 20%;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: absolute;
+            border-radius: 18px;
+        }
+
+        .btn-home p:hover{
+            cursor: pointer;
+            background: #313551;
+        }
+
+        .add-bt{
+            font-size: 20px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 2px 2px 10px black;
+            transform-origin: center;
+            text-decoration: none;
+            color: black;
+            position: absolute;
+            margin-top: 5%;
+            margin-left: 85%;
+        }
+
+        .add-bt:hover{
+            box-shadow: 0px 0px 0px black;
+            transform: scale(1.1);
+        }
+
     </style>
 </head>
 <body>
@@ -221,91 +297,93 @@
         </div>
     </div>
 
+    <div class="btn-home">
+        <p onClick="goBack()">VOLTAR</p>
+    </div>
+
+    <div class="div-addbt">
+        <a href="{% url 'equip' condominio.id %}" class="add-bt">+</a>
+    </div>
+
     <div class="container">
-        <a onClick="goBack()">VOLTAR</a>
-            
-            <h2>{{ condominio.name }}</h2>
+        <div class="title-main">Condomínio {{ condominio.name }}</div>
 
-            <div class="equips">
-                <h3>Equipamentos</h3>
-                <p><a href="{% url 'equip' condominio.id %}">+ Adicionar Equipamento</a></p>
-
-                <strong>Total de Equipamentos:</strong> {{ condominio.itens_facial.count|add:condominio.itens_dvr.count|add:condominio.itens_outro.count }} <!-- soma e mostra os equipamentos -->
-                <div class="total-main">
-                </div>
-            </div>
+        <div class="equips">
+            <p class="title-sec">Equipamentos</p>
+            <strong>Total de Equipamentos:</strong> {{ condominio.itens_facial.count|add:condominio.itens_dvr.count|add:condominio.itens_outro.count }} <!-- soma e mostra os equipamentos -->
+        </div>
 
         <!-- Controladoras Faciais --> 
-            {% if faciais %}
-            <p class="title-equips">Faciais: {{ faciais.count }}</p>
-            <div class="equip-facial">
-                <table>
-                    <thead>
-                        <tr class="tr-head">
-                            <th>Item</th>
-                            <th>IP Local</th>
-                            <th>Link</th>
-                            <th>MAC</th>
-                            <th>Usuário</th>
-                            <th>Senha</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for facial in faciais %}
-                        <tr class="tr-itens">
-                            <td class="td-sm">{{ facial.item }}</td>
-                            <td class="td-sm">{{ facial.iplocal }}</td>
-                            <td class="td-sm"><a href="{{ facial.link }}" class="td-link">{{ facial.link }}</a></td>
-                            <td class="td-sm">{{ facial.mac }}</td>
-                            <td class="td-sm">{{ facial.user }}</td>
-                            <td class="td-sm">{{ facial.senha }}</td>
-                            <td class="td-bg">{{ facial.data|date:"d/m/Y H:i" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+        {% if faciais %}
+        <div class="title-equips">Faciais</div>
+        <div class="equip-facial">
+            <table>
+                <thead>
+                    <tr class="tr-head">
+                        <th>Item</th>
+                        <th>IP Local</th>
+                        <th>Link</th>
+                        <th>MAC</th>
+                        <th>Usuário</th>
+                        <th>Senha</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for facial in faciais %}
+                    <tr class="tr-itens">
+                        <td class="td-sm">{{ facial.item }}</td>
+                        <td class="td-sm">{{ facial.iplocal }}</td>
+                        <td class="td-sm"><a href="{{ facial.link }}" class="td-link">{{ facial.link }}</a></td>
+                        <td class="td-sm">{{ facial.mac }}</td>
+                        <td class="td-sm">{{ facial.user }}</td>
+                        <td class="td-sm">{{ facial.senha }}</td>
+                        <td class="td-bg">{{ facial.data|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 
-            <!-- DVRs/NVRs -->
-            {% if dvr %}
-            <p class="title-equips">DVRs/NVRs {{ dvr.count }}</p>
-            <div class="equip-dvr">
-                <table>
-                    <thead>
-                        <tr class="tr-head">
-                            <th>Item</th>
-                            <th>IP Local</th>
-                            <th>Porta RTSP</th>
-                            <th>Link</th>
-                            <th>MAC</th>
-                            <th>Usuário</th>
-                            <th>Senha</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for dvr in dvr %}
-                        <tr class="tr-itens">
-                            <td class="td-sm">{{ dvr.item }}</td>
-                            <td class="td-sm">{{ dvr.iplocal }}</td>
-                            <td class="td-sm">{{ dvr.rtsp }}</td>
-                            <td class="td-sm"><a href="{{ dvr.link }}" class="td-link">{{ dvr.link }}</a></td>
-                            <td class="td-sm">{{ dvr.mac }}</td>
-                            <td class="td-sm">{{ dvr.user }}</td>
-                            <td class="td-sm">{{ dvr.senha }}</td>
-                            <td class="td-bg">{{ dvr.data|date:"d/m/Y H:i" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+        <!-- DVRs/NVRs -->
+        {% if dvr %}
+        <p class="title-equips">DVRs/NVRs</p>
+        <div class="equip-dvr">
+            <table>
+                <thead>
+                    <tr class="tr-head">
+                        <th>Item</th>
+                        <th>IP Local</th>
+                        <th>Porta RTSP</th>
+                        <th>Link</th>
+                        <th>MAC</th>
+                        <th>Usuário</th>
+                        <th>Senha</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dvr in dvr %}
+                    <tr class="tr-itens">
+                        <td class="td-sm">{{ dvr.item }}</td>
+                        <td class="td-sm">{{ dvr.iplocal }}</td>
+                        <td class="td-sm">{{ dvr.rtsp }}</td>
+                        <td class="td-sm"><a href="{{ dvr.link }}" class="td-link">{{ dvr.link }}</a></td>
+                        <td class="td-sm">{{ dvr.mac }}</td>
+                        <td class="td-sm">{{ dvr.user }}</td>
+                        <td class="td-sm">{{ dvr.senha }}</td>
+                        <td class="td-bg">{{ dvr.data|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 
             <!-- Outros Equipamentos -->
             {% if outro %}
-            <p class="title-equips">Outros Equipamentos {{ outro.count }}</p>
+            <p class="title-equips">Outros Equipamentos</p>
             <div>
                 <div class="equip-outro">
                     <table>
@@ -341,67 +419,58 @@
             {% endif %}
 
             {% if not faciais and not dvr and not outro %}
-            <div>
+            <div class="equips">
                 Nenhum equipamento cadastrado para este condomínio.
-                <a href="{% url 'equip' condominio.id %}">
-                    Clique aqui para adicionar o primeiro equipamento.
-                </a>
             </div>
             {% endif %}
 
-        <div>
-            <h3>RELATOS</h2>
-            <div>
-                <p><strong>Total de Relatos:</strong> {{ relatos.count }}</p>
-                {% if relatos %}
+            <div class="title-sec">Relatos</div>
+            <p class="title-equips">Total de Relatos: {{ relatos.count }}</p> 
+            
+            {% if relatos %}
+            <table>
+                <thead>
+                    <tr class="tr-head">
+                        <th>Descrição do relato</th>
+                        <th>Aplicativo</th>
+                        <th>Categoria do relato</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for relato in relatos %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Descrição do relato</th>
-                                <th>Aplicativo</th>
-                                <th>Categoria do relato</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ relato.relato }}</td>
+                    <tr class="tr-itens">
+                        <td class="td-relato">{{ relato.relato }}</td>
 
-                                {% if relato.tipo_relato_id == 1 %}
-                                    <td>Ayel</td>
-                                {% elif relato.tipo_relato_id == 2 %}
-                                    <td>Ayel Câmeras</td>
-                                {% else %}
-                                    <td>N/A</td>
-                                {% endif %}
+                        {% if relato.tipo_relato_id == 1 %}
+                            <td class="td-sm">Ayel</td>
+                        {% elif relato.tipo_relato_id == 2 %}
+                            <td class="td-sm">Ayel Câmeras</td>
+                        {% else %}
+                            <td class="td-sm">N/A</td>
+                        {% endif %}
 
-                                {% if relato.tipo_relato_id == 1 %}
-                                    {% if relato.cat_rel_ayel_id == 1 %}<td>Aberturas</td>
-                                    {% elif relato.cat_rel_ayel_id == 2 %}<td>Câmeras</td>
-                                    {% elif relato.cat_rel_ayel_id == 3 %}<td>Cadastro no App</td>
-                                    {% elif relato.cat_rel_ayel_id == 4 %}<td>Interfonia</td>
-                                    {% endif %}
-                                {% elif relato.tipo_relato_id == 2 %}
-                                    {% if relato.cat_rel_cam_id == 1 %}<td>Login</td>
-                                    {% elif relato.cat_rel_cam_id == 2 %}<td>Câmeras</td>
-                                    {% elif relato.cat_rel_cam_id == 3 %}<td>Cadastro no App</td>
-                                    {% endif %}
-                                {% else %}
-                                    <td>N/A</td>
-                                {% endif %}
-                                <td>{{ relato.data_local }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        {% if relato.tipo_relato_id == 1 %}
+                            {% if relato.cat_rel_ayel_id == 1 %}<td class="td-sm">Aberturas</td>
+                            {% elif relato.cat_rel_ayel_id == 2 %}<td class="td-sm">Câmeras</td>
+                            {% elif relato.cat_rel_ayel_id == 3 %}<td class="td-sm">Cadastro no App</td>
+                            {% elif relato.cat_rel_ayel_id == 4 %}<td class="td-sm">Interfonia</td>
+                            {% endif %}
+                        {% elif relato.tipo_relato_id == 2 %}
+                            {% if relato.cat_rel_cam_id == 1 %}<td class="td-sm">Login</td>
+                            {% elif relato.cat_rel_cam_id == 2 %}<td class="td-sm">Câmeras</td>
+                            {% elif relato.cat_rel_cam_id == 3 %}<td class="td-sm">Cadastro no App</td>
+                            {% endif %}
+                        {% else %}
+                            <td class="td-sm">N/A</td>
+                        {% endif %}
+                        <td class="td-bg">{{ relato.data_local }}</td>
+                    </tr>
                     {% endfor %}
-                {% endif %}
-            </div>
-        </div>
+                </tbody>
+            </table>
+            {% endif %}
     </div>
-        <div>
-            <a href="{% url 'home' %}"><button>Home</button></a>
-        </div>
 
     <script>
         function goBack(){

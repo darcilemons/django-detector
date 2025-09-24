@@ -1,33 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <title>Cadastrar Equipamento - {{ condominio.name }}</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #181c34;
+            color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #menu-toggle{
+            display: none;
+        }
+
+        .menu-btn{
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-btn span{
+            display: block;
+            height: 3px;
+            width: 30px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .slide-menu{
+            position: fixed;
+            top: 0;
+            left: -190px;
+            width: 250px;
+            height: 100%;
+            background: #1a2041;
+            color: white;
+            transition: left 0.3s ease;
+            padding-top: 40px;
+            z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
+        }
+
+        .slide-menu ul, li{
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
+        }
+
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        #menu-toggle:checked ~ .slide-menu{
+            left: 0;
+        }
+
+        #menu-toggle:checked ~ .overlay{
+            opacity: 1;
+            pointer-events: auto;
+
+        }
+
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
+            background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+            opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+            transform: rotate(-45deg) translate(5px, -8px);
+            background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+
+        .title{
+            font-size: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        form {
+            margin: 20px auto;
+            border-radius: 12px;
+            background: #141727;
+            width: 500px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ESTILO PARA OS GRUPOS DE FORMULÁRIO */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        /* Labels */
+        .form-group label {
+            text-transform: uppercase;
+            font-size: 15px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            color: #fff;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Inputs */
+        .form-group input {
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            background: #313551;
+            color: white;
+            font-size: 16px;
+            border: none;
+            margin: 0 auto;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: #343a6b;
+        }
+
+        .save-btn{
+            background: white;
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 22px;
+            border-radius: 30px;
+        }
+
+        .save-btn:hover{
+            cursor: pointer;
+        }
+
+        .btn-home p{
+            margin: 0 420px;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: fixed;
+            border-radius: 18px;
+        }
+
+        .btn-home p:hover{
+            cursor: pointer;
+            background: #313551;
+        }
+
+        /* Estilos específicos para cada campo 
+        #id_name {
+        }
+        #id_endereco {
+        }
+        */
+
+        .messages {
+            list-style: none;
+            padding: 0;
+        }
+
+        .alert {
+            text-align: center;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .btn-home{
+            margin: 0 420px;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: fixed;
+            border-radius: 18px;
+        }
+
+        .btn-home:hover{
+            cursor: pointer;
+            background: #313551;
+        }
+
+        .title-main {
+            margin-top: 20px;
+            font-size: 25px;
+            font-weight: normal;
+        }
+
+        .title-equips {
+            padding: 20px;
+            width: 90%;
+            margin-left: 20px;
+        }
+
+        .title-radio {
+            padding: 20px;
+            width: 60%;
+            text-align: left;
+            margin-bottom: 18px;
+            border-radius: 16px;
+        }
+
+        .title-radio input[type="radio"] {
+            display: none;
+        }
+
+        /* LABEL PERSONALIZADO */
+        .title-radio label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            margin: 0;
+            
+        }
+
+        /* CÍRCULO PERSONALIZADO DO RADIO */
+        .title-radio label::before {
+            content: "";
+            width: 15px;
+            height: 15px;
+            border: 2px solid #4a526e;
+            border-radius: 50%;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+            background: #2d345b;
+        }
+
+        /* QUANDO O RADIO ESTÁ SELECIONADO */
+        .title-radio input[type="radio"]:checked + label::before {
+            border-color: #ffffffb7;
+            background-color: #ffffffb7;
+        }
+
+        .title-radio input[type="radio"]:checked ~ label {
+            font-weight: bold;
+        }
+
+        /* ESTILO QUANDO SELECIONADO */
+        .title-radio input[type="radio"]:checked ~ .title-radio,
+        .title-radio:has(input[type="radio"]:checked) {
+            background: #191d31;
+        }
+
+        .title-radio input[type="radio"]:focus + label::before {
+            border: 1px solid white;
+        }
+
+    </style>
 </head>
 <body>
-    <div>
-        
-<form method="post">
-    {% csrf_token %}
-    <h3>Selecione o tipo de equipamento para {{ condominio.name }}</h3>
-    <div>
-        <input type="radio" name="tipo_equipamento" value="FACIAL" id="facial">
-        <label for="facial">Controladora Facial</label>
-    </div>
-    
-    <div>
-        <input type="radio" name="tipo_equipamento" value="DVR" id="dvr">
-        <label for="dvr">DVR/NVR</label>
-    </div>
-    
-    <div>
-        <input type="radio" name="tipo_equipamento" value="OUTRO" id="outro">
-        <label for="outro">Outro Equipamento</label>
-    </div>
-    
-    <button type="submit">Continuar</button>
-</form>
+    <a onClick="goBack()" class="btn-home">Voltar</a>
+    <div class="container">
+        <p class="title">Condomínio {{ condominio.name }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="title-main">
+                Cadastro de equipamento
+            </div>
+            <div class="title-equips">
+                Selecione o tipo de equipamento:
+            </div>
+            <div class="title-radio">
+                <input type="radio" name="tipo_equipamento" value="FACIAL" id="facial">
+                <label for="facial">Controladora Facial</label>
+            </div>
+            <div class="title-radio">
+                <input type="radio" name="tipo_equipamento" value="DVR" id="dvr">
+                <label for="dvr">DVR/NVR</label>
+            </div>
+            <div class="title-radio">
+                <input type="radio" name="tipo_equipamento" value="OUTRO" id="outro">
+                <label for="outro">Outro Equipamento</label>
+            </div>
 
-    <a onClick="goBack()"><button>Voltar</button></a>
+            <button type="submit">Continuar</button>
+        </form>
+
+        
     </div>
 
     <script>

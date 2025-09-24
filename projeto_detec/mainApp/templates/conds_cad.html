@@ -304,10 +304,8 @@
             const previousUrl = document.referrer;
     
             if (previousUrl) {
-                // Usa replace para não adicionar ao histórico
                 window.location.replace(previousUrl);
             } else {
-                // Fallback: volta para a página inicial
                 window.location.href = '/';
             }
         }

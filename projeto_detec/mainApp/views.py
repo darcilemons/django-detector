@@ -12,7 +12,7 @@ def cad_cond(request):
         if form.is_valid():
             condominio = form.save()
             messages.success(request, 'Cadastro realizado com sucesso!')
-            return redirect('equip', condominio_id=condominio.id)
+            return redirect('listar_conds', condominio_id=condominio.id)
     else:
         form = condsForm()
     
@@ -53,7 +53,7 @@ def cad_equip(request, condominio_id, tipo):
             equipamento.cond_id = condominio
             equipamento.save()
             messages.success(request, 'Cadastro realizado com sucesso!')
-            return redirect('cadastrar_condominio')
+            return redirect('listar_equips')
     else:
         form = form_class()
     
@@ -251,7 +251,7 @@ def cad_categoria(request, condominio_id, tipo_relato, cat_relato):
                 del request.session['categoria_id']
             
             messages.success(request, "Relato salvo com sucesso!")
-            return redirect('home')
+            return redirect('listar_relatos')
         else:
             # DEBUG: Mostra erros do formulário
             print("Erros do formulário:", form.errors)
