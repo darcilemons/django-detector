@@ -52,7 +52,7 @@ def cad_equip(request, condominio_id, tipo):
             equipamento = form.save(commit=False)
             equipamento.cond_id = condominio
             equipamento.save()
-            messages.success(request, 'Cadastro realizado com sucesso!')
+            messages.success(request, 'Equipamento cadastrado!')
             return redirect('listar_equips')
     else:
         form = form_class()

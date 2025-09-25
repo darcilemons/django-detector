@@ -33,36 +33,28 @@ class FacialForm(forms.ModelForm):
         fields = ['item', 'iplocal', 'link', 'mac', 'http', 'user', 'senha', 'desc']
         widgets = {
             'item': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Item'
+                'class': 'form-control'
             }),
             'iplocal': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'IP local'
+                'class': 'form-control'
             }),
             'link': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Link WEB'
+                'class': 'form-control'
             }),
             'mac': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Endereço MAC'
+                'class': 'form-control'
             }),
             'http': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Porta HTTP'
+                'class': 'form-control'
             }),
             'user': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Usuário'
+                'class': 'form-control'
             }),
             'senha': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Senha'
+                'class': 'form-control'
             }),
             'desc': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Descrição'
+                'class': 'form-control'
             }),
         }
         
@@ -72,36 +64,28 @@ class DVRForm(forms.ModelForm):
         fields = ['item', 'iplocal', 'link', 'mac', 'http', 'rtsp', 'user', 'senha', 'desc']
         widgets = {
             'item': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Item'
+                'class': 'form-control'
             }),
             'iplocal': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'IP local'
+                'class': 'form-control'
             }),
             'link': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Link WEB'
+                'class': 'form-control'
             }),
             'mac': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Endereço MAC'
+                'class': 'form-control'
             }),
             'http': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Porta HTTP'
+                'class': 'form-control'
             }),
             'user': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Usuário'
+                'class': 'form-control'
             }),
             'senha': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Senha'
+                'class': 'form-control'
             }),
             'desc': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Descrição'
+                'class': 'form-control'
             }),
         }
         
@@ -111,36 +95,28 @@ class OutroForm(forms.ModelForm):
         fields = ['item', 'iplocal', 'link', 'mac', 'http', 'rtsp', 'user', 'senha', 'desc']
         widgets = {
             'item': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Item'
+                'class': 'form-control'
             }),
             'iplocal': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'IP local'
+                'class': 'form-control'
             }),
             'link': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Link WEB'
+                'class': 'form-control'
             }),
             'mac': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Endereço MAC'
+                'class': 'form-control'
             }),
             'http': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Porta HTTP'
+                'class': 'form-control'
             }),
             'user': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Usuário'
+                'class': 'form-control'
             }),
             'senha': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Senha'
+                'class': 'form-control'
             }),
             'desc': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Descrição'
+                'class': 'form-control'
             }),
         }
         

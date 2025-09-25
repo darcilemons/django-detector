@@ -1,24 +1,388 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Facial</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #181c34;
+            color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #menu-toggle{
+            display: none;
+        }
+
+        .menu-btn{
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-btn span{
+            display: block;
+            height: 3px;
+            width: 30px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .slide-menu{
+            position: fixed;
+            top: 0;
+            left: -190px;
+            width: 250px;
+            height: 100%;
+            background: #1a2041;
+            color: white;
+            transition: left 0.3s ease;
+            padding-top: 40px;
+            z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
+        }
+
+        .slide-menu ul, li{
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
+        }
+
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        #menu-toggle:checked ~ .slide-menu{
+            left: 0;
+        }
+
+        #menu-toggle:checked ~ .overlay{
+            opacity: 1;
+            pointer-events: auto;
+
+        }
+
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
+            background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+            opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+            transform: rotate(-45deg) translate(5px, -8px);
+            background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+        }
+
+        .alert {
+            text-align: center;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        form {
+            margin: 20px auto;
+            border-radius: 12px;
+            background: #141727;
+            width: 80%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        /* ESTILO PARA OS GRUPOS DE FORMULÁRIO */
+        .form-group {
+            display: flex;
+            justify-content: center; /* Centraliza as colunas */
+            gap: 40px; /* Espaço entre as colunas */
+            margin-bottom: 25px;
+            width: 100%; /* Ocupa toda a largura do form */
+            max-width: 800px; /* Limite máximo */
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* Faz as colunas terem mesma largura */
+            max-width: 350px; /* Largura máxima de cada coluna */
+        }
+
+        .form-column label {
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .form-column input:focus {
+            outline: none;
+            background: #343a6b;
+            border: 1px solid white;
+        }
+
+        /* Labels */
+        .form-group label {
+            font-size: 15px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            margin-right: 10px;
+            color: #fff;
+            text-align: left;
+        }
+
+        /* Inputs */
+        .form-group input {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: #313551;
+            color: white;
+            font-size: 16px;
+            border: none;
+            margin-right: 30px;
+            width: 320px;
+            box-shadow: 2px 2px 10px #0c0e1e;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: #343a6b;
+        }
+
+        form button {
+            background: white;
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+            margin-top: 20px;
+            border-radius: 30px;
+            border: none;
+        }
+
+        form button:hover {
+            cursor: pointer;
+        }
+
+        .btn-home {
+            margin: 80px 200px;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: fixed;
+            border-radius: 18px;
+        }
+
+        .btn-home:hover {
+            cursor: pointer;
+            background: #313551;
+        }
+
+        .title-p {
+            font-size: 25px;
+            margin: 5px auto;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+
+        .title{
+            font-size: 30px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+    </style>
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <div>
-            {{ form.as_p }}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
         </div>
-        <button type="submit">Salvar equipamento</button>
-    </form>
-    <button onCLick="goBack()">Voltar</button>
+    {% endif %}
+
+    <a onCLick="goBack()" class="btn-home">VOLTAR</a>
+
+    <div id="container">
+        <p class="title">Condomínio {{ condominio.name }}</p>
+
+        <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
+
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                </ul>
+            </div>
+        </div>
+
+        <form method="POST">
+            <p class="title-p">Dados do equipamento</p>
+            <p>Controladora facial</p>
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="form-column">
+                    <label for="{{ form.item.id_for_label }}">{{ form.item.label }}</label>
+                    {{ form.item }}
+                </div>
+                <div class="form-column">
+                    <label for="{{ form.iplocal.id_for_label }}">{{ form.iplocal.label }}</label>
+                    {{ form.iplocal }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="form-column">
+                    <label for="{{ form.link.id_for_label }}">{{ form.link.label }}</label>
+                    {{ form.link }}
+                </div>
+                <div class="form-column">
+                    <label for="{{ form.mac.id_for_label }}">{{ form.mac.label }}</label>
+                    {{ form.mac }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="form-column">
+                    <label for="{{ form.http.id_for_label }}">{{ form.http.label }}</label>
+                    {{ form.http }}
+                </div>
+                <div class="form-column">
+                    <label for="{{ form.user.id_for_label }}">{{ form.user.label }}</label>
+                    {{ form.user }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="form-column">
+                    <label for="{{ form.senha.id_for_label }}">{{ form.senha.label }}</label>
+                    {{ form.senha }}
+                </div>
+                <div class="form-column">
+                    <label for="{{ form.desc.id_for_label }}">{{ form.desc.label }}</label>
+                    {{ form.desc }}
+                </div>
+            </div>
+
+            <button type="submit">Salvar equipamento</button>
+        </form>
+    </div>
 
     <script>
         function goBack(){
-            window.history.back();
+            const previousUrl = document.referrer;
+    
+            if (previousUrl) {
+                window.location.replace(previousUrl);
+            } else {
+                window.location.href = '/';
+            }
         }
+
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
     </script>
 </body>
 </html>

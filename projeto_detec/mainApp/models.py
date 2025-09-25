@@ -76,12 +76,12 @@ class Itens_outro(models.Model):
     item = models.CharField(max_length=100, verbose_name="Item")
     iplocal = models.CharField(max_length=15, verbose_name="IP Local")
     link = models.CharField(max_length=100, verbose_name="Link de acesso")
-    mac = models.CharField(max_length=17, default="n/a", verbose_name="Endereço MAC")
-    rtsp = models.PositiveIntegerField(default="n/a", verbose_name="Porta RTSP")
-    http = models.PositiveIntegerField(default="n/a", verbose_name="Porta HTTP")
-    user = models.CharField(max_length=50, default="n/a", verbose_name="Usuário")
-    senha = models.CharField(max_length=50, default="n/a", verbose_name="Senha")
-    desc = models.CharField(max_length=100, default="n/a", verbose_name="Descrição")
+    mac = models.CharField(max_length=17, verbose_name="Endereço MAC")
+    rtsp = models.PositiveIntegerField(verbose_name="Porta RTSP")
+    http = models.PositiveIntegerField(verbose_name="Porta HTTP")
+    user = models.CharField(max_length=50, verbose_name="Usuário")
+    senha = models.CharField(max_length=50, verbose_name="Senha")
+    desc = models.CharField(max_length=100, verbose_name="Descrição")
     data = models.DateTimeField(default=timezone.now)
     
     def __str__(self):

@@ -279,13 +279,23 @@
         }
 
         .title-radio {
-            padding: 20px;
-            width: 60%;
+            padding: 15px 20px;
+            width: 80%;
             text-align: left;
-            margin-bottom: 18px;
-            border-radius: 16px;
+            margin-bottom: 15px;
+            border: 2px solid #1a1f3d; /* Borda padrão (cinza escuro) */
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #1a1f3d;
         }
 
+        .title-radio:hover {
+            border-color: #212747; /* Borda mais clara no hover */
+            background: #212747;
+        }
+
+        /* ESCONDE O RADIO NATIVO */
         .title-radio input[type="radio"] {
             display: none;
         }
@@ -296,47 +306,85 @@
             align-items: center;
             cursor: pointer;
             font-size: 16px;
-            color: #fff;
+            color: #d1d5db; /* Cor mais suave quando não selecionado */
             margin: 0;
-            
         }
 
-        /* CÍRCULO PERSONALIZADO DO RADIO */
+        /* CÍRCULO DO RADIO - SEM BORDA COLORIDA QUANDO NÃO SELECIONADO */
         .title-radio label::before {
             content: "";
-            width: 15px;
-            height: 15px;
-            border: 2px solid #4a526e;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #5a6380; /* Borda cinza quando não selecionado */
             border-radius: 50%;
             margin-right: 12px;
             transition: all 0.3s ease;
-            background: #2d345b;
+            background: #2d345b; /* Fundo escuro */
         }
 
-        /* QUANDO O RADIO ESTÁ SELECIONADO */
+        /* QUANDO O RADIO ESTÁ SELECIONADO - BORDA BRANCA */
         .title-radio input[type="radio"]:checked + label::before {
-            border-color: #ffffffb7;
-            background-color: #ffffffb7;
+            border-color: white; /* BORDA BRANCA */
+            background: white; /* Fundo azul para contraste */
         }
 
-        .title-radio input[type="radio"]:checked ~ label {
+        .title-radio input[type="radio"]:checked + label {
             font-weight: bold;
         }
 
-        /* ESTILO QUANDO SELECIONADO */
-        .title-radio input[type="radio"]:checked ~ .title-radio,
+        /* CONTAINER QUANDO SELECIONADO - BORDA BRANCA TAMBÉM */
         .title-radio:has(input[type="radio"]:checked) {
-            background: #191d31;
+            border-color: #ffffff; /* BORDA BRANCA no container */
         }
 
-        .title-radio input[type="radio"]:focus + label::before {
-            border: 1px solid white;
+        .save-btn{
+            background: white;
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 22px;
+            border-radius: 30px;
+        }
+
+        .save-btn:hover{
+            cursor: pointer;
         }
 
     </style>
 </head>
 <body>
-    <a onClick="goBack()" class="btn-home">Voltar</a>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <a onClick="goBack()" class="btn-home">VOLTAR</a>
+
+    <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
+
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                </ul>
+            </div>
+        </div>
+
     <div class="container">
         <p class="title">Condomínio {{ condominio.name }}</p>
         <form method="post">
@@ -360,7 +408,7 @@
                 <label for="outro">Outro Equipamento</label>
             </div>
 
-            <button type="submit">Continuar</button>
+            <button type="submit" class="save-btn">Continuar</button>
         </form>
 
         
@@ -368,8 +416,21 @@
 
     <script>
         function goBack(){
-            window.history.back();
+            const previousUrl = document.referrer;
+    
+            if (previousUrl) {
+                window.location.replace(previousUrl);
+            } else {
+                window.location.href = '/';
+            }
         }
+
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
     </script>
 </body>
 </html>
