@@ -12,7 +12,7 @@ def cad_cond(request):
         if form.is_valid():
             condominio = form.save()
             messages.success(request, 'Cadastro realizado com sucesso!')
-            return redirect('listar_conds', condominio_id=condominio.id)
+            return redirect('listar_conds')
     else:
         form = condsForm()
     
@@ -44,7 +44,7 @@ def cad_equip(request, condominio_id, tipo):
         form_class = OutroForm
         template = 'equip-forms/cad_outro.html'
     else:
-        return redirect('equip', condominio_id=condominio_id)
+        return redirect('cad_equip', condominio_id=condominio_id)
     
     if request.method == 'POST':
         form = form_class(request.POST)
@@ -53,7 +53,7 @@ def cad_equip(request, condominio_id, tipo):
             equipamento.cond_id = condominio
             equipamento.save()
             messages.success(request, 'Equipamento cadastrado!')
-            return redirect('listar_equips')
+            return redirect('home_equip')
     else:
         form = form_class()
     

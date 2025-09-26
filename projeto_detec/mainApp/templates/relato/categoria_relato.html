@@ -40,7 +40,40 @@
                 <button type="submit" class="btn-primary">Próximo</button>
             {% endif %}
         </form>
-        <a href="{% url 'relato' condominio.id %}"><button>Voltar</button></a>
+        <a onClick="goBack()" class="btn-home">VOLTAR</a>
+<script>
+    function goBack() {
+            // Lista de URLs que podem causar loops
+            const problemPages = [
+                '/cadastrar-equipamento/<int:condominio_id>/<str:tipo>/',
+                'listar_equips/edit_equip/<int:equipamento_id>/',
+                'main_relato/<int:condominio_id>/<str:tipo_relato>/'
+            ];
+            
+            const currentUrl = window.location.href;
+            const referrer = document.referrer;
+            
+            // if referrer é uma página problemática ou a própria página atual
+            if (problemPages.some(page => referrer.includes(page)) || 
+                referrer === currentUrl) {
+                // Vá para uma página segura
+                window.location.href = '/equipamentos/';
+            } 
+            // if veio de uma página externa ou não há histórico
+            else if (!referrer || referrer === '' || window.history.length <= 1) {
+                window.location.href = '/';
+            } else {
+                window.history.back();
+            }
+        }
 
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+        
+</script>
 </body>
 </html>

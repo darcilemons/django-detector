@@ -273,6 +273,8 @@
                 </ul>
             </div>
         </div>
+
+        {% if itens %}
             <table>
                 <thead>
                     <tr class="tr-head">
@@ -303,6 +305,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+        {% endif %}
     </div>
 
     <script>
