@@ -154,7 +154,7 @@
         }
 
         .td-item{
-            width: 150px;
+            width: 300px;
             text-align: center;
             height: 35px;
         }
@@ -170,7 +170,7 @@
         }
 
         .td-condname{
-            width: 300px;
+            width: 150px;
             margin: 0 auto;
             padding: 10px 25px;
 
@@ -225,6 +225,19 @@
             border-color: #f5c6cb;
         }
 
+        .bt-details{
+            display: flex;
+            color: #181c34;
+            justify-content: center;
+            text-decoration: none;
+            background: white;
+            padding-top: 7px;
+            padding-bottom: 7px;
+            width: 100px;
+            border-radius: 70px;
+            margin-right: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -240,7 +253,7 @@
 
     <div id="container">
         <h1 class="title">EQUIPAMENTOS</h1>
-        <p>Total de equipamentos: {{ facial.count|add:dvr.count|add:outro.count }}</p>
+        <p>Total de equipamentos: {{ itens|length }}</p>
 
         <div id="bar">
             <input type="checkbox" id="menu-toggle">
@@ -260,27 +273,32 @@
                 </ul>
             </div>
         </div>
-
             <table>
                 <thead>
                     <tr class="tr-head">
                         <th>Equipamento</th>
                         <th>Tipo</th>
                         <th>Condomínio</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item_data in itens %}
-                        <tr class="tr-itens"></tr>
-                            {% if item_data %}
-                                <td class="td-item">{{ item_data.item }}</td>
-                                <td class="td-tipo">{{ item_data.tipo }}</td>
-                                <td>
-                                    <a href="{% url 'detail_conds' item_data.cond_id.id %}" class="td-condname">{{ item_data.cond_id.name }}</a>
-                                </td>
-                            {% else %}
-                                <p>Nenhum equipamento encontrado.</p>
-                            {% endif %}
+                        <tr class="tr-itens">
+                            <td class="td-item">{{ item_data.item }}</td>
+                            <td class="td-tipo">{{ item_data.tipo }}</td>
+                            <td>
+                                <a href="{% url 'detail_conds' item_data.cond_id.id %}" class="td-condname">{{ item_data.cond_id.name }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_equip' tipo=item_data.tipo_modelo equipamento_id=item_data.id %}" class="bt-details">
+                                    EDITAR
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <p>Nenhum equipamento encontrado.</p>
                         </tr>
                     {% endfor %}
                 </tbody>

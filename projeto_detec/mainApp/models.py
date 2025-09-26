@@ -50,10 +50,13 @@ class Itens_facial(models.Model):
     user = models.CharField(max_length=50, verbose_name="Usuário")
     senha = models.CharField(max_length=50, verbose_name="Senha")
     desc = models.CharField(max_length=100, verbose_name="Descrição")
-    data = models.DateTimeField(default=timezone.now)
+    data = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.item} - {self.cond_id.name}"
+    
+    def get_tipo_display(self):
+        return "Controladora Facial"
     
 class Itens_dvr(models.Model):
     cond_id = models.ForeignKey(Conds, on_delete=models.CASCADE, related_name='itens_dvr', verbose_name="Condomínio")
@@ -66,10 +69,13 @@ class Itens_dvr(models.Model):
     user = models.CharField(max_length=50, verbose_name="Usuário")
     senha = models.CharField(max_length=50, verbose_name="Senha")
     desc = models.CharField(max_length=100, verbose_name="Descrição")
-    data = models.DateTimeField(default=timezone.now)
+    data = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.item} - {self.cond_id.name}"
+    
+    def get_tipo_display(self):
+        return "DVR/NVR"
     
 class Itens_outro(models.Model):
     cond_id = models.ForeignKey(Conds, on_delete=models.CASCADE, related_name='itens_outro', verbose_name="Condomínio")
@@ -82,10 +88,13 @@ class Itens_outro(models.Model):
     user = models.CharField(max_length=50, verbose_name="Usuário")
     senha = models.CharField(max_length=50, verbose_name="Senha")
     desc = models.CharField(max_length=100, verbose_name="Descrição")
-    data = models.DateTimeField(default=timezone.now)
+    data = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.item} - {self.cond_id.name}"
+    
+    def get_tipo_display(self):
+        return "Outro equipamento"
     
 class TipoEquip(models.Model):
     TIPOS_EQUIPAMENTOS = [

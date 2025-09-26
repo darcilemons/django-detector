@@ -291,6 +291,7 @@
             <ul>
                 <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
                 <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                <a href="{% url 'listar_equips' %}" class="side-btn"><li>Eqiuipamentos</li></a>
                 <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
                 <a href="" class="side-btn"><li>Dashboard</li></a>
             </ul>
@@ -345,7 +346,7 @@
             </table>
         </div>
         {% endif %}
-
+        
         <!-- DVRs/NVRs -->
         {% if dvr %}
         <p class="title-equips">DVRs/NVRs</p>
@@ -381,95 +382,96 @@
         </div>
         {% endif %}
 
-            <!-- Outros Equipamentos -->
-            {% if outro %}
-            <p class="title-equips">Outros Equipamentos</p>
-            <div>
-                <div class="equip-outro">
-                    <table>
-                        <thead>
-                            <tr class="tr-head">
-                                <th>Item</th>
-                                <th>IP Local</th>
-                                <th>Porta RTSP</th>
-                                <th>Link</th>
-                                <th>MAC</th>
-                                <th>Usuário</th>
-                                <th>Senha</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for outro in outro %}
-                            <tr class="tr-itens">
-                                <td class="td-sm">{{ outro.item }}</td>
-                                <td class="td-sm">{{ outro.iplocal }}</td>
-                                <td class="td-sm">{{ outro.rtsp }}</td>
-                                <td class="td-sm"><a href="{{ outro.link }}" class="td-link">{{ outro.link }}</a></td>
-                                <td class="td-sm">{{ outro.mac }}</td>
-                                <td class="td-sm">{{ outro.user}}</td>
-                                <td class="td-sm">{{ outro.senha }}</td>
-                                <td class="td-bg">{{ outro.data|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if not faciais and not dvr and not outro %}
-            <div class="equips">
-                Nenhum equipamento cadastrado para este condomínio.
-            </div>
-            {% endif %}
-
-            <div class="title-sec">Relatos</div>
-            <p class="title-equips">Total de Relatos: {{ relatos.count }}</p> 
-            
-            {% if relatos %}
+        <!-- Outros Equipamentos -->
+        {% if outro %}
+        <p class="title-equips">Outros Equipamentos</p>
+        <div class="equip-outro">
             <table>
                 <thead>
                     <tr class="tr-head">
-                        <th>Descrição do relato</th>
-                        <th>Aplicativo</th>
-                        <th>Categoria do relato</th>
+                        <th>Item</th>
+                        <th>IP Local</th>
+                        <th>Porta RTSP</th>
+                        <th>Link</th>
+                        <th>MAC</th>
+                        <th>Usuário</th>
+                        <th>Senha</th>
                         <th>Data</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for relato in relatos %}
+                    {% for outro in outro %}
                     <tr class="tr-itens">
-                        <td class="td-relato">{{ relato.relato }}</td>
-
-                        {% if relato.tipo_relato_id == 1 %}
-                            <td class="td-sm">Ayel</td>
-                        {% elif relato.tipo_relato_id == 2 %}
-                            <td class="td-sm">Ayel Câmeras</td>
-                        {% else %}
-                            <td class="td-sm">N/A</td>
-                        {% endif %}
-
-                        {% if relato.tipo_relato_id == 1 %}
-                            {% if relato.cat_rel_ayel_id == 1 %}<td class="td-sm">Aberturas</td>
-                            {% elif relato.cat_rel_ayel_id == 2 %}<td class="td-sm">Câmeras</td>
-                            {% elif relato.cat_rel_ayel_id == 3 %}<td class="td-sm">Cadastro no App</td>
-                            {% elif relato.cat_rel_ayel_id == 4 %}<td class="td-sm">Interfonia</td>
-                            {% endif %}
-                        {% elif relato.tipo_relato_id == 2 %}
-                            {% if relato.cat_rel_cam_id == 1 %}<td class="td-sm">Login</td>
-                            {% elif relato.cat_rel_cam_id == 2 %}<td class="td-sm">Câmeras</td>
-                            {% elif relato.cat_rel_cam_id == 3 %}<td class="td-sm">Cadastro no App</td>
-                            {% endif %}
-                        {% else %}
-                            <td class="td-sm">N/A</td>
-                        {% endif %}
-                        <td class="td-bg">{{ relato.data_local }}</td>
+                        <td class="td-sm">{{ outro.item }}</td>
+                        <td class="td-sm">{{ outro.iplocal }}</td>
+                        <td class="td-sm">{{ outro.rtsp }}</td>
+                        <td class="td-sm"><a href="{{ outro.link }}" class="td-link">{{ outro.link }}</a></td>
+                        <td class="td-sm">{{ outro.mac }}</td>
+                        <td class="td-sm">{{ outro.user}}</td>
+                        <td class="td-sm">{{ outro.senha }}</td>
+                        <td class="td-bg">{{ outro.data|date:"d/m/Y H:i" }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if not faciais and not dvr and not outro %}
+        <div class="equips">
+            Nenhum equipamento cadastrado para este condomínio.
+        </div>
+        {% endif %}
+
+        <div class="equips">
+            <p class="title-sec">Relatos</p>
+            <strong >Total de Relatos: {{ relatos.count }}</strong> 
+        </div>
+        
+        
+        {% if relatos %}
+        <table>
+            <thead>
+                <tr class="tr-head">
+                    <th>Descrição do relato</th>
+                    <th>Aplicativo</th>
+                    <th>Categoria do relato</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for relato in relatos %}
+                <tr class="tr-itens">
+                    <td class="td-relato">{{ relato.relato }}</td>
+
+                    {% if relato.tipo_relato_id == 1 %}
+                        <td class="td-sm">Ayel</td>
+                    {% elif relato.tipo_relato_id == 2 %}
+                        <td class="td-sm">Ayel Câmeras</td>
+                    {% else %}
+                        <td class="td-sm">N/A</td>
+                    {% endif %}
+
+                    {% if relato.tipo_relato_id == 1 %}
+                        {% if relato.cat_rel_ayel_id == 1 %}<td class="td-sm">Aberturas</td>
+                        {% elif relato.cat_rel_ayel_id == 2 %}<td class="td-sm">Câmeras</td>
+                        {% elif relato.cat_rel_ayel_id == 3 %}<td class="td-sm">Cadastro no App</td>
+                        {% elif relato.cat_rel_ayel_id == 4 %}<td class="td-sm">Interfonia</td>
+                        {% endif %}
+                    {% elif relato.tipo_relato_id == 2 %}
+                        {% if relato.cat_rel_cam_id == 1 %}<td class="td-sm">Login</td>
+                        {% elif relato.cat_rel_cam_id == 2 %}<td class="td-sm">Câmeras</td>
+                        {% elif relato.cat_rel_cam_id == 3 %}<td class="td-sm">Cadastro no App</td>
+                        {% endif %}
+                    {% else %}
+                        <td class="td-sm">N/A</td>
+                    {% endif %}
+                    <td class="td-bg">{{ relato.data_local }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </div>
 
     <script>

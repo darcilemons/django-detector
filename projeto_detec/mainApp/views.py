@@ -93,29 +93,93 @@ def listar_relatos(request):
     return render(request, 'relato/listar_relatos.html', context)
 
 def listar_equips(request):
-    facial = Itens_facial.objects.all()
-    dvr = Itens_dvr.objects.all()
-    outro = Itens_outro.objects.all()
+    from itertools import chain
     
-    for item in facial:
-        item.tipo = 'Facial'
-        
-    for item in dvr:
-        item.tipo = 'DVR/NVR'
-        
-    for item in outro:
-        item.tipo = 'Outro'
-        
-    itens = list(facial) + list(dvr) + list(outro)
+    faciais = Itens_facial.objects.all().order_by('-data')
+    dvrs = Itens_dvr.objects.all().order_by('-data')
+    outros = Itens_outro.objects.all().order_by('-data')
+    
+    all_items = sorted(
+        chain(faciais, dvrs, outros),
+        key=lambda instance: instance.data,
+        reverse=True
+    )
+    
+    itens_data = []
+    for equipamento in all_items:
+        if hasattr(equipamento, 'item'):
+            if isinstance(equipamento, Itens_facial):
+                tipo_modelo = 'Facial'
+                tipo_display = 'Controlador Facial'
+            elif isinstance(equipamento, Itens_dvr):
+                tipo_modelo = 'DVR'
+                tipo_display = 'DVR/NVR'
+            elif isinstance(equipamento, Itens_outro):
+                tipo_modelo = 'Outro'
+                tipo_display = 'Outro'
+            else:
+                tipo_modelo = 'Equipamento'
+                tipo_display = 'Equipamento'
+            
+            itens_data.append({
+                'item': equipamento.item,
+                'tipo': tipo_display,
+                'tipo_modelo': tipo_modelo,
+                'cond_id': equipamento.cond_id,
+                'data': equipamento.data,
+                'id': equipamento.id
+            })
     
     context = {
-        'facial': facial,
-        'dvr': dvr,
-        'outro': outro,
-        'itens': itens
+        'faciais': faciais,
+        'dvrs': dvrs,
+        'outros': outros,
+        'itens': itens_data
     }
     
     return render(request, 'equip-forms/listar_equips.html', context)
+
+def edit_equip(request, equipamento_id, tipo):
+    
+    tipo_map = {
+        'Facial': {'modelo': Itens_facial, 'form': FacialForm, 'template': 'equip-forms/editar_facial.html'},
+        'DVR': {'modelo': Itens_dvr, 'form': DVRForm, 'template': 'equip-forms/editar_dvr.html'},
+        'Outro': {'modelo': Itens_outro, 'form': OutroForm, 'template': 'equip-forms/editar_outro.html'},
+    }
+    
+    # Validar tipo
+    if tipo not in tipo_map:
+        messages.error(request, 'Tipo de equipamento inválido.')
+        return redirect('listar_equips')
+    
+    # Obter configurações baseadas no tipo
+    config = tipo_map[tipo]
+    equipamento = get_object_or_404(config['modelo'], id=equipamento_id)
+    
+    if request.method == 'POST':
+        form = config['form'](request.POST, instance=equipamento)
+        if form.is_valid():
+            # ATUALIZA A DATA automaticamente
+            equipamento_editado = form.save(commit=False)
+            from django.utils import timezone
+            equipamento_editado.data = timezone.now()  # Atualiza a data
+            equipamento_editado.save()
+            
+            messages.success(request, f'Equipamento {equipamento.item} atualizado com sucesso!')
+            return redirect('listar_equips')
+        else:
+            messages.error(request, 'Erro ao atualizar equipamento. Verifique os dados.')
+    else:
+        form = config['form'](instance=equipamento)
+    
+    context = {
+        'form': form,
+        'equipamento': equipamento,
+        'tipo': tipo,
+        'condominio': equipamento.cond_id
+    }
+    
+    return render(request, config['template'], context)
 
 def main_relato(request):
     cond = Conds.objects.all()
