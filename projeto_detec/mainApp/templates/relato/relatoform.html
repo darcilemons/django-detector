@@ -4,50 +4,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELATO</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #181c34;
+            color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            border-radius: 12px;
+            background: #141727;
+            width: 500px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ESTILO PARA OS GRUPOS DE FORMULÁRIO */
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding: 10px;
+            width: 50%;
+            border-radius: 12px;
+            background: #1a2041;
+            color: white;
+        }
+
+        /* Option */
+        .form-control option {
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            background: #313551;
+            color: white;
+            font-size: 16px;
+            border: none;
+            margin: 0 auto;
+        }
+
+        .form-control option:focus {
+            outline: none;
+            background: #343a6b;
+        }
+
+        #menu-toggle{
+            display: none;
+        }
+
+        .menu-btn{
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-btn span{
+            display: block;
+            height: 3px;
+            width: 30px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .slide-menu{
+            position: fixed;
+            top: 0;
+            left: -190px;
+            width: 250px;
+            height: 100%;
+            background: #1a2041;
+            color: white;
+            transition: left 0.3s ease;
+            padding-top: 40px;
+            z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
+        }
+
+        .slide-menu ul, li{
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
+        }
+
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        #menu-toggle:checked ~ .slide-menu{
+            left: 0;
+        }
+
+        #menu-toggle:checked ~ .overlay{
+            opacity: 1;
+            pointer-events: auto;
+
+        }
+
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
+            background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+            opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+            transform: rotate(-45deg) translate(5px, -8px);
+            background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+
+        .title{
+            font-size: 35px;
+            text-align: left;
+        }
+
+        .btn-home{
+            margin: 15px 350px;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: absolute;
+            border-radius: 18px;
+        }
+
+        .btn-home:hover{
+            cursor: pointer;
+            background: #313551;
+        }
+        
+        .title-equips {
+            padding: 10px;
+            display: flex;
+        }
+
+        .save-btn{
+            background: white;
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 30px;
+            border-radius: 30px;
+        }
+
+        .save-btn:hover{
+            cursor: pointer;
+        }
+
+        .form-control label {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Relato para {{ condominio.name }}</h1>
-    <h3>Tipo: {{ tipo_relato.get_nome_display }}</h3>
-    <h3>Categoria: {{ categoria.get_nome_display }}</h3>
-    
-    <form method="post">
-        {% csrf_token %}
-        
-        <!-- Mostra todos os erros do formulário -->
-        {% if form.non_field_errors %}
-            <div class="error">
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
-        
-        <!-- Campo relato (único campo editável) -->
-        <div>
-            <label for="id_relato">Descrição do Relato:*</label>
-            <textarea name="relato" id="id_relato" class="form-control" rows="4" required>{{ form.relato.value|default:'' }}</textarea>
-            {% if form.relato.errors %}
-                <div class="error">{{ form.relato.errors }}</div>
-            {% endif %}
-        </div>
-        
-        <!-- Campos hidden para os valores fixos -->
-        <input type="hidden" name="tipo_relato" value="{{ tipo_relato.id }}">
-        
-        {% if tipo_relato.nome == 'ayel' %}
-            <input type="hidden" name="cat_rel_ayel" value="{{ categoria.id }}">
-            <input type="hidden" name="cat_rel_cam" value="">
-        {% else %}
-            <input type="hidden" name="cat_rel_cam" value="{{ categoria.id }}">
-            <input type="hidden" name="cat_rel_ayel" value="">
-        {% endif %}
-        
-        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px;">
-            Salvar Relato
-        </button>
-    </form>
-    
-    <br>
-    <a href="{% url 'categoria_relato' condominio.id tipo_relato.nome %}">Voltar</a>
-
     {% if messages %}
     <div style="color: green; margin: 10px 0;">
         {% for message in messages %}
@@ -55,5 +230,109 @@
         {% endfor %}
     </div>
     {% endif %}
+
+    <p onClick="goBack()" class="btn-home">VOLTAR</p>
+
+    <div id="container">
+
+        <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
+
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                </ul>
+            </div>
+        </div>
+        
+
+        <h1>Relato para {{ condominio.name }}</h1>
+        <p class="title-equips">Tipo: {{ tipo_relato.get_nome_display }}</p>
+        
+
+        <form method="POST">
+            <h3>Categoria: {{ categoria.get_nome_display }}</h3>
+            {% csrf_token %}
+            
+            <!-- Mostra todos os erros do formulário -->
+            {% if form.non_field_errors %}
+                <div class="error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <!-- Campo relato (único campo editável) -->
+            <div>
+                <label for="id_relato">Descrição do Relato:</label>
+                <textarea name="relato" id="id_relato" class="form-control" rows="4" required>{{ form.relato.value|default:'' }}</textarea>
+                {% if form.relato.errors %}
+                    <div class="error">{{ form.relato.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Campos hidden para os valores fixos -->
+            <input type="hidden" name="tipo_relato" value="{{ tipo_relato.id }}">
+            
+            {% if tipo_relato.nome == 'ayel' %}
+                <input type="hidden" name="cat_rel_ayel" value="{{ categoria.id }}">
+                <input type="hidden" name="cat_rel_cam" value="">
+            {% else %}
+                <input type="hidden" name="cat_rel_cam" value="{{ categoria.id }}">
+                <input type="hidden" name="cat_rel_ayel" value="">
+            {% endif %}
+            
+            <button type="submit" class="save-btn">
+                Salvar
+            </button>
+        </form>
+    </div>
+
+    
+
+    
+
+    <script>
+        function goBack() {
+            // Lista de URLs que podem causar loops
+            const problemPages = [
+                '/cadastrar-equipamento/<int:condominio_id>/<str:tipo>/',
+                'listar_equips/edit_equip/<int:equipamento_id>/',
+                'main_relato/<int:condominio_id>/<str:tipo_relato>/'
+            ];
+            
+            const currentUrl = window.location.href;
+            const referrer = document.referrer;
+            
+            // if referrer é uma página problemática ou a própria página atual
+            if (problemPages.some(page => referrer.includes(page)) || 
+                referrer === currentUrl) {
+                // Vá para uma página segura
+                window.location.href = '/equipamentos/';
+            } 
+            // if veio de uma página externa ou não há histórico
+            else if (!referrer || referrer === '' || window.history.length <= 1) {
+                window.location.href = '/';
+            } else {
+                window.history.back();
+            }
+        }
+        
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+    </script>
 </body>
 </html>

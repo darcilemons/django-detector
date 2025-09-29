@@ -4,28 +4,304 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELATO</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #181c34;
+            color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            border-radius: 12px;
+            background: #141727;
+            width: 500px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ESTILO PARA OS GRUPOS DE FORMULÁRIO */
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding: 10px;
+            width: 50%;
+            border-radius: 12px;
+            background: #1a2041;
+            color: white;
+        }
+
+        /* Option */
+        .form-control option {
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            background: #313551;
+            color: white;
+            font-size: 16px;
+            border: none;
+            margin: 0 auto;
+        }
+
+        .form-control option:focus {
+            outline: none;
+            background: #343a6b;
+        }
+
+        #menu-toggle{
+            display: none;
+        }
+
+        .menu-btn{
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-btn span{
+            display: block;
+            height: 3px;
+            width: 30px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .slide-menu{
+            position: fixed;
+            top: 0;
+            left: -190px;
+            width: 250px;
+            height: 100%;
+            background: #1a2041;
+            color: white;
+            transition: left 0.3s ease;
+            padding-top: 40px;
+            z-index: 1001;
+            box-shadow: 5px -10px 10px #12162d;
+        }
+        #menu-toggle:checked ~ .slide-menu{
+            box-shadow: 0px 0px 0px ;
+        }
+
+        .slide-menu ul, li{
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-right: 60px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu ul{
+            align-content: space-evenly;
+        }
+
+        #menu-toggle:checked ~ .slide-menu ul, li{
+            padding-right: 30px;
+            padding-left: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .slide-menu li:hover{
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .slide-menu ul{
+            list-style-type: none;
+        }
+
+        .overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        #menu-toggle:checked ~ .slide-menu{
+            left: 0;
+        }
+
+        #menu-toggle:checked ~ .overlay{
+            opacity: 1;
+            pointer-events: auto;
+
+        }
+
+        #menu-toggle:checked + .menu-btn span:nth-child(1){ /* span 1 e assim por diante */
+            transform: rotate(45deg) translate(5px, 8px);
+            background: #fff;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(2){
+            opacity: 0;
+        }
+        #menu-toggle:checked + .menu-btn span:nth-child(3){
+            transform: rotate(-45deg) translate(5px, -8px);
+            background: #fff;
+        }
+
+        .side-btn{
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-btn:hover{
+            cursor: pointer;
+        }
+
+        .title{
+            font-size: 35px;
+            text-align: left;
+        }
+
+        .btn-home p{
+            margin: 15px 350px;
+            padding: 20px 10px;
+            font-size: 14px;
+            background: #181c34;
+            color: white;
+            text-align: center;
+            position: absolute;
+            border-radius: 18px;
+        }
+
+        .btn-home p:hover{
+            cursor: pointer;
+            background: #313551;
+        }
+        
+        .title-equips {
+            padding: 10px;
+            display: flex;
+        }
+
+        .save-btn{
+            background: white;
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 30px;
+            border-radius: 30px;
+        }
+
+        .save-btn:hover{
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Condomínio {{ condominio.name }}</h1>
-    <h2>Selecione o aplicativo</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        <select name="tipo_relato" class="form-control">
-            {% for tipo in tipos_relato %}
-                <option value="{{ tipo.id }}">{{ tipo.get_nome_display }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Próximo</button>
-    </form>
-    <button><a href="{% url 'main_relato' %}">Voltar</a></button>
-
     {% if messages %}
-    <div class="alert alert-danger">
-        {% for message in messages %}
-            {{ message }}
-        {% endfor %}
-    </div>
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
     {% endif %}
+    <div class="btn-home">
+        <p onClick="goBack()">VOLTAR</p>
+    </div>
 
+    <div id="container">
+        
+
+        <div id="bar">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <label for="menu-toggle" class="overlay"></label>
+
+            <div class="slide-menu">
+                <ul>
+                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                </ul>
+            </div>
+        </div>
+
+        <h1 class="title">Condomínio {{ condominio.name }}</h1>
+        <p class="title-equips">Selecione o aplicativo</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <select name="tipo_relato" class="form-control">
+                {% for tipo in tipos_relato %}
+                <div class="sel-form">
+                    <option value="{{ tipo.id }}" class="sel-op">{{ tipo.get_nome_display }}</option>
+                </div>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="save-btn">Próximo</button>
+        </form>
+    </div>
+    <script>
+        function goBack() {
+            // Lista de URLs que podem causar loops
+            const problemPages = [
+                '/cadastrar-equipamento/<int:condominio_id>/<str:tipo>/',
+                'listar_equips/edit_equip/<int:equipamento_id>/',
+                'main_relato/<int:condominio_id>/<str:tipo_relato>/'
+            ];
+            
+            const currentUrl = window.location.href;
+            const referrer = document.referrer;
+            
+            // if referrer é uma página problemática ou a própria página atual
+            if (problemPages.some(page => referrer.includes(page)) || 
+                referrer === currentUrl) {
+                // Vá para uma página segura
+                window.location.href = '/equipamentos/';
+            } 
+            // if veio de uma página externa ou não há histórico
+            else if (!referrer || referrer === '' || window.history.length <= 1) {
+                window.location.href = '/';
+            } else {
+                window.history.back();
+            }
+        }
+        
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
