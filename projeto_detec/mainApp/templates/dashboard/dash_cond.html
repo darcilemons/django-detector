@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condomínio</title>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Dashboard - {{ condominio.nome }}</h1>
+        <a href="{% url 'detail_conds' condominio.id %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar para Detalhes
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatos Ayél</h5>
+                </div>
+                <div class="card-body">
+                    {% if relatos_ayel %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Categoria</th>
+                                        <th class="text-end">Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for relato in relatos_ayel %}
+                                    <tr>
+                                        <td>{{ relato.cat_rel_ayel__nome }}</td>
+                                        <td class="text-end">{{ relato.total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Nenhum relato Ayél encontrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatos Câmeras</h5>
+                </div>
+                <div class="card-body">
+                    {% if relatos_cam %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Categoria</th>
+                                        <th class="text-end">Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for relato in relatos_cam %}
+                                    <tr>
+                                        <td>{{ relato.cat_rel_cam__nome }}</td>
+                                        <td class="text-end">{{ relato.total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Nenhum relato de Câmeras encontrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+</body>
+</html>

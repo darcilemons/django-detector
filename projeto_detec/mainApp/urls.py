@@ -16,4 +16,9 @@ urlpatterns = [
     path('main_relato/<int:condominio_id>/', views.relato, name='relato'), # escolher app
     path('main_relato/<int:condominio_id>/<str:tipo_relato>/', views.categoria_relato, name='categoria_relato'), # categoria do relato
     path('main_relato/<int:condominio_id>/<str:tipo_relato>/<str:cat_relato>/', views.cad_categoria, name='cad_categoria'), # cadastrar relato
+    # DASHBOARD
+    path('dashboard/', views.DashboardRelatosView.as_view(), name='dashboard'),
+    path('dashboard/api/', views.dashboard_data_api, name='dashboard_api'),
+    path('dashboard/condominio/<int:condominio_id>/', views.dashboard_condominio, name='dashboard_condominio'),
+
 ]

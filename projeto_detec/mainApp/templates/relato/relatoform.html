@@ -220,16 +220,13 @@
         .form-control label {
             text-align: center;
         }
+
+        .title{
+            font-size: 35px;
+        }
     </style>
 </head>
 <body>
-    {% if messages %}
-    <div style="color: green; margin: 10px 0;">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     <p onClick="goBack()" class="btn-home">VOLTAR</p>
 
@@ -256,7 +253,7 @@
         </div>
         
 
-        <h1>Relato para {{ condominio.name }}</h1>
+        <h1 class="title">Condomínio {{ condominio.name }}</h1>
         <p class="title-equips">Tipo: {{ tipo_relato.get_nome_display }}</p>
         
 

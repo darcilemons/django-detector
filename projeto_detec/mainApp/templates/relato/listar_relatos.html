@@ -225,10 +225,40 @@
             box-shadow: 0px 0px 0px black;
             transform: scale(1.1);
         }
+        .messages {
+            list-style: none;
+            padding: 0;
+        }
+
+        .alert {
+            text-align: center;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
         
     </style>
 </head>
 <body>
+    {% if messages %}
+    <div style="color: green; margin: 10px 0;">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div id="container">
         <h1 id="title">RELATOS</h1>
