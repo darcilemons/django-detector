@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -215,50 +217,14 @@
         
         <!-- Filtros -->
         <div class="filters">
-            <div class="dropdown">
-                <div class="periodo">
-                    {% if periodo_selecionado == 'todos' %}
-                        Período: {{ periodo_selecionado }} os dias
-                    {% else %}
-                        Período: {{ periodo_selecionado }} dias
-                    {% endif %}
-                </div>
-
-                <ul class="dropdown">
-                    <a class="dropdown-item" href="?periodo=7"><li>Últimos 7 dias</li></a>
-                    <a class="dropdown-item" href="?periodo=30"><li>Últimos 30 dias</li></a>
-                    <a class="dropdown-item" href="?periodo=90"><li>Últimos 90 dias</li></a>
-                    <a class="dropdown-item" href="?periodo=todos"><li>Todos</li></a>
-                </ul>
-            </div>
-            
-            <div class="dropdown">
-                <i class="fas fa-filter me-2"></i>
-                {% if tipo_relato_selecionado == 'ayel_cameras' %}
-                    Tipo: Ayel Câmeras
-                {% else %}
-                    Tipo: {{ tipo_relato_selecionado|title }}
-                {% endif %}
-
-                <ul class="dropdown-menu">
-                    <a class="dropdown-item" href="?periodo={{ periodo_selecionado }}&tipo_relato=todos"><li>Todos</li></a>
-                    {% for tipo in tipos_relato %}
-                        {% if tipo.nome == 'ayel_cameras' %}
-                            <a class="dropdown-item" href="?periodo={{ periodo_selecionado }}&tipo_relato={{ tipo.nome }}"><li>Ayel Câmeras</li></a>
-                        {% else %}
-                            <a class="dropdown-item" href="?periodo={{ periodo_selecionado }}&tipo_relato={{ tipo.nome }}"><li>{{ tipo.nome|title }}</li></a>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
     
 
-    <!-- Cards de Resumo -->
+        <!-- Cards de Resumo -->
         <div class="card-body">
             <div>
                 <div>Total de Relatos</div>
-                <div class="fs-4 fw-semibold">{{ total_relatos }}</div>
+                <div id="total_geral"></div>
             </div>
         </div>
 
@@ -276,7 +242,7 @@
             
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <div>Relatos Câmeras</div>
+                    <div>Relatos Ayel Câmeras</div>
                     <div class="fs-4 fw-semibold">
                         {% for tipo in relatos_por_tipo %}
                             {% if tipo.tipo_relato__nome == 'ayel_cameras' %}
@@ -288,156 +254,53 @@
             </div>
         </div>
 
-    <!-- Gráficos -->
-    <div class="row">
-        <!-- Gráfico Ayel -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="ayel-cat"></i>
-                Relatos Ayel por Categoria
-            </div>
-            <div class="card-body">
-                <canvas id="ayelChart" width="50%" height="50"></canvas>
-            </div>
-        </div>
-        
-        <!-- Gráfico Câmeras -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-camera me-1"></i>
-                Relatos Ayel Câmeras por Categoria
-            </div>
-            <div class="card-body">
-                <canvas id="camerasChart" width="50%" height="50"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Gráfico de Comparação -->
-    <div class="row">
-        <div class="col-12">
+        <!-- Gráficos -->
+        <div class="row">
+            <!-- Gráfico Ayel -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="fas fa-chart-bar me-1"></i>
+                    Relatos Ayel por Categoria
+                </div>
+                <div class="card-body">
+                    <canvas id="ayelChart" width="50%" height="50"></canvas>
+                </div>
+            </div>
+            
+            <!-- Gráfico Câmeras -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    Relatos Ayel Câmeras por Categoria
+                </div>
+                <div class="card-body">
+                    <canvas id="camerasChart" width="50%" height="50"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Comparação -->
+            <div class="card mb-4">
+                <div class="card-header">
                     Comparação por Tipo de Relato
                 </div>
                 <div class="card-body">
                     <canvas id="comparacaoChart" width="100%" height="50"></canvas>
                 </div>
             </div>
+
+            <!-- Gráfoco por período -->
+            <div>
+                <div>Relato por tempo</div>
+                <div class="canva">
+                    <canvas id="rel-tempChart"></canvas>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
-</div>
 
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Carrega dados via AJAX
-    function carregarDadosDashboard() {
-        const periodo = new URLSearchParams(window.location.search).get('periodo') || '30';
-        const tipo = new URLSearchParams(window.location.search).get('tipo_relato') || 'todos';
-        
-        fetch(`{% url 'dashboard_api' %}?periodo=${periodo}&tipo=${tipo}`)
-            .then(response => response.json())
-            .then(data => {
-                atualizarGraficos(data);
-            })
-            .catch(error => {
-                console.error('Erro ao carregar dados:', error);
-            });
-    }
+    const TOTAL_RELATOS_URL = "{% url 'total_relatos' %}";
+</script>
+<script src="{% static 'js/dash.js' %}"></script>
 
-    // Atualiza todos os gráficos
-    function atualizarGraficos(dados) {
-        // Gráfico Ayel
-        const ayelCtx = document.getElementById('ayelChart').getContext('2d');
-        new Chart(ayelCtx, {
-            type: 'pie',
-            data: {
-                labels: dados.ayel.labels,
-                datasets: [{
-                    data: dados.ayel.data,
-                    backgroundColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
-                        '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Distribuição Ayel'
-                    }
-                }
-            }
-        });
-
-        // Gráfico Câmeras
-        const camerasCtx = document.getElementById('camerasChart').getContext('2d');
-        new Chart(camerasCtx, {
-            type: 'pie',
-            data: {
-                labels: dados.cameras.labels,
-                datasets: [{
-                    data: dados.cameras.data,
-                    backgroundColor: [
-                        '#36A2EB', '#FFCE56', '#4BC0C0', 
-                        '#9966FF', '#FF9F40'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Distribuição Câmeras'
-                    }
-                }
-            }
-        });
-
-        // Gráfico de Comparação
-        const comparacaoCtx = document.getElementById('comparacaoChart').getContext('2d');
-        new Chart(comparacaoCtx, {
-            type: 'bar',
-            data: {
-                labels: dados.tipos.labels,
-                datasets: [{
-                    label: 'Número de Relatos',
-                    data: dados.tipos.data,
-                    backgroundColor: ['#36A2EB', '#FFCE56'],
-                    borderColor: ['#1E88E5', '#FFA726'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    // Carrega dados quando a página carrega
-    document.addEventListener('DOMContentLoaded', function() {
-        carregarDadosDashboard();
-    });
-    </script>
-{% endblock %}
 </body>
 </html>

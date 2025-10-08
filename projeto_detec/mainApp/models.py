@@ -116,7 +116,8 @@ class TipoRelato(models.Model):
     ]
 
     nome = models.CharField(max_length=15, choices=TIPOS_RELATOS, unique=True)
-
+    tipo_display = models.CharField(max_length=20, default="N/A")
+    
     def __str__(self):
         return self.nome
     

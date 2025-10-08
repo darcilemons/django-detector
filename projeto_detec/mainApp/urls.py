@@ -17,8 +17,10 @@ urlpatterns = [
     path('main_relato/<int:condominio_id>/<str:tipo_relato>/', views.categoria_relato, name='categoria_relato'), # categoria do relato
     path('main_relato/<int:condominio_id>/<str:tipo_relato>/<str:cat_relato>/', views.cad_categoria, name='cad_categoria'), # cadastrar relato
     # DASHBOARD
-    path('dashboard/', views.DashboardRelatosView.as_view(), name='dashboard'),
-    path('dashboard/api/', views.dashboard_data_api, name='dashboard_api'),
-    path('dashboard/condominio/<int:condominio_id>/', views.dashboard_condominio, name='dashboard_condominio'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('total_relatos/', views.total_relatos, name='total_relatos'),
+    path('dash_relatos_ano/', views.dash_relatos_ano, name='dash_relatos_ano'),
+    path('relato_cond/', views.relato_cond, name='relato_cond'),
+    path('relatorio_categoria/', views.relatorio_categoria, name='relatorio_categoria')
 
 ]

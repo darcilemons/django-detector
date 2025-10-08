@@ -3,7 +3,9 @@ from .forms import condsForm, FacialForm, DVRForm, OutroForm, RelatoForm
 from django.contrib import messages
 from .models import Conds, Itens_dvr, Itens_facial, Itens_outro, TipoRelato, CategoriaRelatoAyel, CategoriaRelatoCam, Relatos
 from django.db.models import Count, Q
+from django.http.response import Http404, HttpResponse
 from django.http import JsonResponse
+from django.db.models import Count
 from django.views.generic import TemplateView
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -347,170 +349,95 @@ def cad_categoria(request, condominio_id, tipo_relato, cat_relato):
         'categoria': categoria_obj
     })
 
-class DashboardRelatosView(TemplateView):
-    template_name = 'dashboard/dashboard.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Filtros
-        periodo = self.request.GET.get('periodo', '30')
-        tipo_relato = self.request.GET.get('tipo_relato', 'todos')
-        
-        # Dados
-        context.update({
-            'relatos_por_categoria_ayel': self.get_relatos_por_categoria_ayel(periodo),
-            'relatos_por_categoria_cam': self.get_relatos_por_categoria_cam(periodo),
-            'relatos_por_tipo': self.get_relatos_por_tipo(periodo),
-            'relatos_por_mes': self.get_relatos_por_mes(),
-            'total_relatos': Relatos.objects.count(),
-            'periodo_selecionado': periodo,
-            'tipo_relato_selecionado': tipo_relato,
-            'tipos_relato': TipoRelato.objects.all()
-        })
-        
-        return context
-    
-    def get_relatos_por_categoria_ayel(self, periodo_dias):
-        """Relatos por categoria Ayel"""
-        relatos = self._filtrar_por_periodo(periodo_dias)
-        
-        return relatos.filter(
-            cat_rel_ayel_id__isnull=False
-        ).values(
-            'cat_rel_ayel__nome'
-        ).annotate(
-            total=Count('id')
-        ).order_by('-total')
-    
-    def get_relatos_por_categoria_cam(self, periodo_dias):
-        """Relatos por categoria Ayel Câmeras"""
-        relatos = self._filtrar_por_periodo(periodo_dias)
-        
-        return relatos.filter(
-            cat_rel_cam_id__isnull=False
-        ).values(
-            'cat_rel_cam__nome'
-        ).annotate(
-            total=Count('id')
-        ).order_by('-total')
-    
-    def get_relatos_por_tipo(self, periodo_dias):
-        """Relatos por tipo (Ayél vs Câmeras)"""
-        relatos = self._filtrar_por_periodo(periodo_dias)
-        
-        return relatos.values(
-            'tipo_relato__nome'
-        ).annotate(
-            total=Count('id')
-        ).order_by('-total')
-    
-    def get_relatos_por_mes(self):
-        """Relatos agrupados por mês"""
-        return Relatos.objects.extra(
-            select={'mes': "DATE_FORMAT(data, '%%Y-%%m')"}
-        ).values('mes').annotate(
-            total=Count('id')
-        ).order_by('mes')
-    
-    def _filtrar_por_periodo(self, periodo_dias):
-        """Filtra relatos por período"""
-        if periodo_dias != 'todos':
-            data_inicio = timezone.now() - timedelta(days=int(periodo_dias))
-            return Relatos.objects.filter(data__gte=data_inicio)
-        return Relatos.objects.all()
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
-# API para dados JSON
-def dashboard_data_api(request):
-    """API para fornecer dados do dashboard em JSON"""
-    periodo = request.GET.get('periodo', '30')
-    tipo = request.GET.get('tipo', 'todos')
+def total_relatos(request):
+    total = Relatos.objects.all().aggregate(Count('id'))['id__count']
+    return JsonResponse({'total': total})
+
+def dash_relatos_ano(request):
+    x = Relatos.objects.all()
     
-    # Filtra por período
-    if periodo != 'todos':
-        data_inicio = timezone.now() - timedelta(days=int(periodo))
-        relatos = Relatos.objects.filter(data_criacao__gte=data_inicio)
-    else:
-        relatos = Relatos.objects.all()
+    meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+    data = []
+    labels = []
+    mes = datetime.now().month + 1
+    ano = datetime.now().year
+    for i in range(12):
+        mes -= 1
+        if mes == 0:
+            mes = 12
+            ano -= 1
+            
+        y = len([i.id for i in x if i.data.month == mes and i.data.year == ano]) # conta a quantidade de elementos por mês
+        labels.append(meses[mes-1]) # -1 porque a lista começa com 0
+        data.append(y)
+        
+    data_json = {'data': data[::-1], 'labels': labels[::-1]}
     
-    # Filtra por tipo se especificado
-    if tipo != 'todos':
-        relatos = relatos.filter(tipo_relato__nome=tipo)
+    return JsonResponse(data_json)
+
+def relato_cond(request):
+    # 3 conds com mais relatos
+    conds = Conds.objects.all()
+    label = []
+    data = []
     
-    # Dados para Ayél
-    dados_ayel = relatos.filter(
-        cat_rel_ayel_id__isnull=False
-    ).values(
-        'cat_rel_ayel__nome'
-    ).annotate(
-        total=Count('id')
-    ).order_by('-total')
+    for cond in conds: # passa por cada item
+        relatos = Relatos.objects.filter(cond_id=cond).aggregate(Count('id')) # seleciona no bd de relatos apenas os relatos com o id do condomínio
+        
+        label.append(cond.name)
+        data.append(relatos['id__count'])
+            
+    print(label)
+    print(data)
     
-    # Dados para Câmeras
-    dados_cam = relatos.filter(
-        cat_rel_cam_id__isnull=False
-    ).values(
+    x = list(zip(label, data)) # junta em uma lista - vira tupla
+
+    x.sort(key=lambda x: x[1], reverse=True) # 'reverse=True' significa que vai organizar do maior para o menor
+    
+    x = list(zip(*x)) # separa a lista, uma com apenas os nomes e outra com a quantidade
+
+    return JsonResponse({'labels': x[0][:3], 'data': x[1][:3]}) # [:3] = seleciona apenas os 3 primeiros da lista
+
+def relatorio_categoria(request):
+    # ordenar quantidade de relatos por categoria e por app
+    relatos_ayel = Relatos.objects.filter(tipo_relato_id=1)
+    relatos_cam = Relatos.objects.filter(tipo_relato_id=2)
+    
+    ayel_label = []
+    ayel_data = []
+    
+    cam_label = []
+    cam_data = []
+    
+    #AYEL
+    ayel_count = relatos_ayel.values('cat_rel_ayel_id', 'cat_rel_ayel__nome').annotate(total=Count('id'))
+    
+    for cat in ayel_count:
+        ayel_label.append(cat['cat_rel_ayel__nome'] or f"Categoria {cat['cat_rel_ayel__nome']}") # pega o nome da categoria e cria um fallback para se a categoria for None
+        ayel_data.append(cat['total']) # soma e adiciona ao array 'total'
+        
+    x = list(zip(ayel_label, ayel_data))
+    x.sort(key=lambda x: x[1], reverse=True)
+    x = list(zip(*x))
+    
+    # AYEL CÂMERAS
+    cam_count = relatos_cam.values(
+        'cat_rel_cam_id',
         'cat_rel_cam__nome'
     ).annotate(
         total=Count('id')
-    ).order_by('-total')
-    
-    # Dados por tipo
-    dados_tipo = relatos.values(
-        'tipo_relato__nome'
-    ).annotate(
-        total=Count('id')
-    ).order_by('-total')
-    
-    # Formata resposta
-    resultado = {
-        'ayel': {
-            'labels': [item['cat_rel_ayel__nome'] for item in dados_ayel],
-            'data': [item['total'] for item in dados_ayel],
-        },
-        'cameras': {
-            'labels': [item['cat_rel_cam__nome'] for item in dados_cam],
-            'data': [item['total'] for item in dados_cam],
-        },
-        'tipos': {
-            'labels': [item['tipo_relato__nome'] for item in dados_tipo],
-            'data': [item['total'] for item in dados_tipo],
-        }
-    }
-    
-    return JsonResponse(resultado)
+    ).order_by('cat_rel_cam_id')
 
-# Dashboard por condomínio
-def dashboard_condominio(request, condominio_id):
-    """Dashboard específico para um condomínio"""
-    condominio = get_object_or_404(Conds, id=condominio_id)
+    for cat in cam_count:
+        cam_label.append(cat['cat_rel_cam__nome'] or f"Categoria {cat['cat_rel_cam__nome']}")
+        cam_data.append(cat['total'])
+    y = list(zip(cam_label, cam_data))
+    y.sort(key=lambda y: y[1], reverse=True)
+    y = list(zip(*y))
     
-    relatos_condominio = Relatos.objects.filter(cond_id=condominio)
     
-    # Dados para Ayél no condomínio
-    dados_ayel = relatos_condominio.filter(
-        cat_rel_ayel_id__isnull=False
-    ).values(
-        'cat_rel_ayel__nome'
-    ).annotate(
-        total=Count('id')
-    ).order_by('-total')
-    
-    # Dados para Câmeras no condomínio
-    dados_cam = relatos_condominio.filter(
-        cat_rel_cam_id__isnull=False
-    ).values(
-        'cat_rel_cam__nome'
-    ).annotate(
-        total=Count('id')
-    ).order_by('-total')
-    
-    context = {
-        'condominio': condominio,
-        'relatos_ayel': dados_ayel,
-        'relatos_cam': dados_cam,
-        'total_relatos': relatos_condominio.count(),
-        'ultimos_relatos': relatos_condominio.order_by('-data_criacao')[:5]
-    }
-    
-    return render(request, 'dashboard/dashboard_condominio.html', context)
+    return JsonResponse({'ayel_labels': x[0], 'ayel_data': x[1],
+                         'cam_labels': y[0], 'cam_data': y[1]})

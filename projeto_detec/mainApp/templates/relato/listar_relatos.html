@@ -253,11 +253,13 @@
 </head>
 <body>
     {% if messages %}
-    <div style="color: green; margin: 10px 0;">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
     {% endif %}
 
     <div id="container">
@@ -276,7 +278,7 @@
                     <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
                     <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
                     <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
-                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                    <a href="{% url 'dashboard' %}" class="side-btn"><li>Dashboard</li></a>
                 </ul>
             </div>
         </div>
@@ -333,11 +335,19 @@
         </table>
         
     {% else %}
-        Nenhum relato cadastrado.
-        <a href="{% url 'main_relato' %}">+ Relato</a>
+        Nenhum relato cadastrado. Para adicionar <a href="{% url 'main_relato' %}"> clique aqui.</a>
+        
     {% endif %}
     </div>
+    <script>
+        
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
 
-    
+</script>
 </body>
 </html>
