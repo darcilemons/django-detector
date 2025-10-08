@@ -357,6 +357,7 @@ def total_relatos(request):
     return JsonResponse({'total': total})
 
 def dash_relatos_ano(request):
+    # quantidade de relatos no ano atual
     x = Relatos.objects.all()
     
     meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
@@ -389,9 +390,6 @@ def relato_cond(request):
         
         label.append(cond.name)
         data.append(relatos['id__count'])
-            
-    print(label)
-    print(data)
     
     x = list(zip(label, data)) # junta em uma lista - vira tupla
 
@@ -437,7 +435,6 @@ def relatorio_categoria(request):
     y = list(zip(cam_label, cam_data))
     y.sort(key=lambda y: y[1], reverse=True)
     y = list(zip(*y))
-    
     
     return JsonResponse({'ayel_labels': x[0], 'ayel_data': x[1],
                          'cam_labels': y[0], 'cam_data': y[1]})

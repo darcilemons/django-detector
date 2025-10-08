@@ -179,16 +179,31 @@
             display: flex;
         }
 
-        .card-row {
-            display: flex;
-            justify-content: center;
-            gap: 200px;
-            margin-bottom: 25px;
-            width: 50%;
-            background: #272e54;
-            padding: 10px;
-            border-radius: 10px;
+        #total_geral {
+            text-align: center;
         }
+
+        .chart-anual {
+            width: 600px;
+            padding: 30px;
+        }
+
+        .chart-circle {
+            width: 400px;
+            background-color:#1a2041;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .grafico {
+            display: flex;
+            justify-content: center; /* Centraliza as colunas */
+            gap: 40px; /* Espaço entre as colunas */
+            margin-bottom: 60px;
+            width: 100%; /* Ocupa toda a largura do form */
+            max-width: 800px; /* Limite máximo */
+        }
+
 
     </style>
 </head>
@@ -213,94 +228,53 @@
     </div>
 
     <div id="container">
-        <p class="title">Dashboard de Relatos</p>
-        
-        <!-- Filtros -->
-        <div class="filters">
-        </div>
-    
+        <p class="title">Dashboard de Relatos</p>    
 
         <!-- Cards de Resumo -->
         <div class="card-body">
             <div>
-                <div>Total de Relatos</div>
+                <div>Total de Relatos:</div>
                 <div id="total_geral"></div>
             </div>
         </div>
 
-        <div class="card-row">
-            <div class="card-body">
-                <div>Relatos Ayel</div>
-                <div class="fs-4 fw-semibold">
-                    {% for tipo in relatos_por_tipo %}
-                        {% if tipo.tipo_relato__nome == 'ayel' %}
-                            {{ tipo.total }}
-                        {% endif %}
-                    {% endfor %}
-                </div>
+        <!-- Gráficos -->
+        
+            <div class="chart-anual">
+                Relatos:
+                <canvas id="relatos_anual"></canvas>
             </div>
-            
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>Relatos Ayel Câmeras</div>
-                    <div class="fs-4 fw-semibold">
-                        {% for tipo in relatos_por_tipo %}
-                            {% if tipo.tipo_relato__nome == 'ayel_cameras' %}
-                                {{ tipo.total }}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
+        <div class="grafico">
+            <div class="chart-circle">
+                Condomínios com mais relatos:
+                <canvas id="relatos_cond"></canvas>
+            </div>
+        
+            <div class="chart-circle">
+                APP Ayel - Categorias:
+                <canvas id="relato_cat_ayel"></canvas>
+            </div>
+
+            <div class="chart-circle">
+                APP Ayel Câmeras - Categorias:
+                <canvas id="relato_cat_cam"></canvas>
             </div>
         </div>
-
-        <!-- Gráficos -->
-        <div class="row">
-            <!-- Gráfico Ayel -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    Relatos Ayel por Categoria
-                </div>
-                <div class="card-body">
-                    <canvas id="ayelChart" width="50%" height="50"></canvas>
-                </div>
-            </div>
-            
-            <!-- Gráfico Câmeras -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    Relatos Ayel Câmeras por Categoria
-                </div>
-                <div class="card-body">
-                    <canvas id="camerasChart" width="50%" height="50"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Comparação -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    Comparação por Tipo de Relato
-                </div>
-                <div class="card-body">
-                    <canvas id="comparacaoChart" width="100%" height="50"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfoco por período -->
-            <div>
-                <div>Relato por tempo</div>
-                <div class="canva">
-                    <canvas id="rel-tempChart"></canvas>
-                </div>
-            </div>
 
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dash.js' %}"></script>
 
 <script>
-    const TOTAL_RELATOS_URL = "{% url 'total_relatos' %}";
+    window.onload = function(event){
+        renderiza_total_geral('{% url "total_relatos" %}') // sempre que a tela carregar chama a função e o URL = name da view
+        renderiza_relatos_anual('{% url "dash_relatos_ano" %}')
+        renderiza_relatos_cond('{% url "relato_cond" %}')
+        renderiza_relatos_por_cat_ayel('{% url "relatorio_categoria" %}')
+        renderiza_relatos_por_cat_cam('{% url "relatorio_categoria" %}')
+    }
 </script>
-<script src="{% static 'js/dash.js' %}"></script>
 
 </body>
 </html>
