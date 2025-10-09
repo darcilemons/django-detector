@@ -360,7 +360,7 @@ def dash_relatos_ano(request):
     # quantidade de relatos no ano atual
     x = Relatos.objects.all()
     
-    meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+    meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
     data = []
     labels = []
     mes = datetime.now().month + 1
@@ -411,10 +411,10 @@ def relatorio_categoria(request):
     cam_data = []
     
     #AYEL
-    ayel_count = relatos_ayel.values('cat_rel_ayel_id', 'cat_rel_ayel__nome').annotate(total=Count('id'))
+    ayel_count = relatos_ayel.values('cat_rel_ayel_id', 'cat_rel_ayel__nome_display_ayel').annotate(total=Count('id'))
     
     for cat in ayel_count:
-        ayel_label.append(cat['cat_rel_ayel__nome'] or f"Categoria {cat['cat_rel_ayel__nome']}") # pega o nome da categoria e cria um fallback para se a categoria for None
+        ayel_label.append(cat['cat_rel_ayel__nome_display_ayel'] or f"Categoria {cat['cat_rel_ayel__nome_display_ayel']}") # pega o nome da categoria e cria um fallback para se a categoria for None
         ayel_data.append(cat['total']) # soma e adiciona ao array 'total'
         
     x = list(zip(ayel_label, ayel_data))
@@ -422,15 +422,11 @@ def relatorio_categoria(request):
     x = list(zip(*x))
     
     # AYEL CÂMERAS
-    cam_count = relatos_cam.values(
-        'cat_rel_cam_id',
-        'cat_rel_cam__nome'
-    ).annotate(
-        total=Count('id')
-    ).order_by('cat_rel_cam_id')
+    cam_count = relatos_cam.values('cat_rel_cam_id', 'cat_rel_cam__nome_display_cam').annotate(total=Count('id')).order_by('cat_rel_cam_id')
 
+    
     for cat in cam_count:
-        cam_label.append(cat['cat_rel_cam__nome'] or f"Categoria {cat['cat_rel_cam__nome']}")
+        cam_label.append(cat['cat_rel_cam__nome_display_cam'] or f"Categoria {cat['cat_rel_cam__nome_display_cam']}")
         cam_data.append(cat['total'])
     y = list(zip(cam_label, cam_data))
     y.sort(key=lambda y: y[1], reverse=True)

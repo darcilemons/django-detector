@@ -46,7 +46,7 @@ class Itens_facial(models.Model):
     iplocal = models.CharField(max_length=15, verbose_name="IP Local")
     link = models.CharField(max_length=100, verbose_name="Link de acesso")
     mac = models.CharField(max_length=17, verbose_name="Endereço MAC")
-    http = models.PositiveIntegerField(max_length=4, verbose_name="Porta HTTP")
+    http = models.PositiveIntegerField(verbose_name="Porta HTTP")
     user = models.CharField(max_length=50, verbose_name="Usuário")
     senha = models.CharField(max_length=50, verbose_name="Senha")
     desc = models.CharField(max_length=100, verbose_name="Descrição")
@@ -64,8 +64,8 @@ class Itens_dvr(models.Model):
     iplocal = models.CharField(max_length=15, verbose_name="IP Local")
     link = models.CharField(max_length=100, verbose_name="Link de acesso")
     mac = models.CharField(max_length=17, verbose_name="Endereço MAC")
-    rtsp = models.PositiveIntegerField(max_length=4, verbose_name="Porta RTSP")
-    http = models.PositiveIntegerField(max_length=4, verbose_name="Porta HTTP")
+    rtsp = models.PositiveIntegerField(verbose_name="Porta RTSP")
+    http = models.PositiveIntegerField(verbose_name="Porta HTTP")
     user = models.CharField(max_length=50, verbose_name="Usuário")
     senha = models.CharField(max_length=50, verbose_name="Senha")
     desc = models.CharField(max_length=100, verbose_name="Descrição")
@@ -130,9 +130,10 @@ class CategoriaRelatoAyel(models.Model):
     ]
     
     nome = models.CharField(max_length=20, choices=CATEGORIA_AYEL, unique=True)
+    nome_display_ayel = models.CharField(max_length=20)
     
     def __str__(self):
-        return self.nome
+        return self.nome_display_ayel
     
 class CategoriaRelatoCam(models.Model):
     CATEGORIA_CAM = [
@@ -142,9 +143,10 @@ class CategoriaRelatoCam(models.Model):
     ]
     
     nome = models.CharField(max_length=20, choices=CATEGORIA_CAM, unique=True)
+    nome_display_cam = models.CharField(max_length=20)
     
     def __str__(self):
-        return self.nome 
+        return self.nome_display_cam
 
 class Relatos(models.Model):
     cond_id = models.ForeignKey(Conds, on_delete=models.CASCADE, related_name='relatos', verbose_name='Condomínio')

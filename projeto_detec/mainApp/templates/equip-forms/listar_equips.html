@@ -230,12 +230,9 @@
             color: #181c34;
             justify-content: center;
             text-decoration: none;
-            background: white;
             padding-top: 7px;
             padding-bottom: 7px;
             width: 100px;
-            border-radius: 70px;
-            margin-right: 5px;
         }
 
     </style>
@@ -269,7 +266,7 @@
                     <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
                     <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
                     <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
-                    <a href="" class="side-btn"><li>Dashboard</li></a>
+                    <a href="{% url 'dashboard' %}" class="side-btn"><li>Dashboard</li></a>
                 </ul>
             </div>
         </div>
@@ -294,7 +291,11 @@
                             </td>
                             <td>
                                 <a href="{% url 'edit_equip' tipo=item_data.tipo_modelo equipamento_id=item_data.id %}" class="bt-details">
-                                    EDITAR
+                                    <svg width="22" height="31" viewBox="0 0 22 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15.5516 1.00809C18.1724 1.0517 19.2494 1.83122 20.7477 4.00809L8.39163 25.4094L2.85163 29.005L3.19548 22.4094L15.5516 1.00809Z" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="16" stroke-linejoin="round"/>
+                                        <path d="M17.8062 9.10435C14.9554 9.06958 13.8032 8.4329 12.6101 6.10435" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="16" stroke-linejoin="round"/>
+                                    </svg>
+
                                 </a>
                             </td>
                         </tr>

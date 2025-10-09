@@ -366,24 +366,24 @@
     <a onClick="goBack()" class="btn-home">VOLTAR</a>
 
     <div id="bar">
-            <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="menu-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-            <label for="menu-toggle" class="overlay"></label>
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <label for="menu-toggle" class="overlay"></label>
 
-            <div class="slide-menu">
-                <ul>
-                    <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
-                    <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
-                    <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
-                    <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
-                    <a href="" class="side-btn"><li>Dashboard</li></a>
-                </ul>
-            </div>
+        <div class="slide-menu">
+            <ul>
+                <a href="{% url 'listar_conds' %}" class="side-btn"><li>Condomínios</li></a>
+                <a href="{% url 'listar_relatos' %}" class="side-btn"><li>Relatos</li></a>
+                <a href="{% url 'home' %}" class="side-btn"><li>Home</li></a>
+                <a href="{% url 'listar_equips' %}" class="side-btn"><li>Equipamentos</li></a>
+                <a href="{% url 'dashboard' %}" class="side-btn"><li>Dashboard</li></a>
+            </ul>
         </div>
+    </div>
 
     <div class="container">
         <p class="title">Condomínio {{ condominio.name }}</p>
